@@ -6,7 +6,7 @@
 	},
 	"name" : "capitaladot/Net_Telnet",
 	"require" : {
-		"php" : ">=5.6"
+		"php" : ">=5.5"
 	},
 	"authors" : [{
 			"name" : "Jesse Norell",
@@ -14,7 +14,6 @@
 			"role" : "Author"
 		}
 	],
-	"support" : {},
 	"homepage" : "https://github.com/capitaladot/Net_Telnet",
 	"license" : "Apache-2.0",
 	"keywords" : [
