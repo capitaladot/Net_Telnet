@@ -1,0 +1,23 @@
+{
+	"autoload" : {
+		"psr-4" : {
+			"Capitaladot\\Net_Telnet\\" : "src"
+		}
+	},
+	"name" : "capitaladot/Net_Telnet",
+	"require" : {
+		"php" : ">=5.6"
+	},
+	"authors" : [{
+			"name" : "Jesse Norell",
+			"email" : "jesse@kci.net",
+			"role" : "Author"
+		}
+	],
+	"support" : {},
+	"homepage" : "https://github.com/capitaladot/Net_Telnet",
+	"license" : "Apache-2.0",
+	"keywords" : [
+		"telnet"
+	]
+}
