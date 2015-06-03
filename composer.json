@@ -1,7 +1,7 @@
 {
 	"autoload" : {
 		"psr-4" : {
-			"Capitaladot\\Net_Telnet\\" : "src"
+			"Net\\Net_Telnet\\" : "src"
 		}
 	},
 	"name" : "capitaladot/Net_Telnet",
