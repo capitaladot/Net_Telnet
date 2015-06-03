@@ -792,7 +792,7 @@ class Net_Telnet {
 				if (! TELOPT_OK ( $opt ))
 					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->debug ( "> " . $TELCMDS [$cmd] . " " . $TELOPTS [$opt] . " " . $data ); // how to print/format this nicely?
-				              
+				                                                                               
 				// Escape IAC char
 				$data = preg_replace ( '/\xff/', "\xff\xff", $data );
 				
