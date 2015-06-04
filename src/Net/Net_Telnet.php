@@ -898,33 +898,24 @@ class Net_Telnet {
 				if (! self::TELOPT_OK ( $opt ))
 					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				
-				$this->debug ( "> " . $this->TELCMDS[$cmd] . " " . $this->TELOPTS[
-						$opt
-				]
-				;
+				$this->debug ( "> " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				
 				$this->telcmds ['sent'] [$opt] [$cmd] = true;
 				$this->put_data ( self::TEL_IAC . $cmd . $opt, false, false );
 				break;
 			case self::TEL_NOP :
-				$this->debug ( "> " . $this->TELCMDS[
-						$cmd
-				]
-				;
+				$this->debug ( "> " . $this->TELCMDS [$cmd] );
 				$this->put_data ( self::TEL_IAC . $cmd . $opt, false, false );
 				break;
 			case self::TEL_SB :
 				if (! self::TELOPT_OK ( $opt ))
 					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
-				$this->debug ( "> " . $this->TELCMDS[$cmd] . " " . $this->TELOPTS[
-						$opt
-				] . " " . $data
-				; // how
-				                 // to
-				                 // print/format
-				                 // this
-				                 // nicely?
-				                 
+				$this->debug ( "> " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] . " " . $data ); // how
+				   // to
+				   // print/format
+				   // this
+				   // nicely?
+				   
 				// Escape IAC char
 				$data = preg_replace ( '/\xff/', "\xff\xff", $data );
 				
@@ -935,10 +926,7 @@ class Net_Telnet {
 				throw new Exception ( "don't send SE, send SB and I'll add the SE" );
 				break;
 			default :
-				throw new Exception ( "don't know how to handle " . $this->TELCMDS[
-						$cmd
-				] . " command"
-				;
+				throw new Exception ( "don't know how to handle " . $this->TELCMDS [$cmd] . " command" );
 				break;
 		}
 	}
@@ -962,10 +950,7 @@ class Net_Telnet {
 				if (! self::TELOPT_OK ( $opt ))
 					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->telcmds ['received'] [$opt] [$cmd] = true;
-				$this->debug ( "< " . $this->TELCMDS[$cmd] . " " . $this->TELOPTS[
-						$opt
-				]
-				;
+				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				switch ($opt) {
 					case self::TELOPT_BINARY :
 						if ($this->mode ['rx_binmode']) {
@@ -1041,10 +1026,7 @@ class Net_Telnet {
 				if (! self::TELOPT_OK ( $opt ))
 					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->telcmds ['received'] [$opt] [$cmd] = true;
-				$this->debug ( "< " . $this->TELCMDS[$cmd] . " " . $this->TELOPTS[
-						$opt
-				]
-				;
+				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				switch ($opt) {
 					case self::TELOPT_BINARY :
 						if (! $this->mode ['rx_binmode']) {
@@ -1114,10 +1096,7 @@ class Net_Telnet {
 				if (! self::TELOPT_OK ( $opt ))
 					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->telcmds ['received'] [$opt] [$cmd] = true;
-				$this->debug ( "< " . $this->TELCMDS[$cmd] . " " . $this->TELOPTS[
-						$opt
-				]
-				;
+				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				switch ($opt) {
 					case self::TELOPT_BINARY :
 						if ($this->mode ['rx_binmode']) {
@@ -1192,10 +1171,7 @@ class Net_Telnet {
 				if (! self::TELOPT_OK ( $opt ))
 					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->telcmds ['received'] [$opt] [$cmd] = true;
-				$this->debug ( "< " . $this->TELCMDS[$cmd] . " " . $this->TELOPTS[
-						$opt
-				]
-				;
+				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				switch ($opt) {
 					case self::TELOPT_BINARY :
 						if (! $this->mode ['tx_binmode']) {
@@ -1258,18 +1234,12 @@ class Net_Telnet {
 			case self::TEL_SB :
 				if (! self::TELOPT_OK ( $opt ))
 					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
-				$this->debug ( "< " . $this->TELCMDS[$cmd] . " " . $this->TELOPTS[
-						$opt
-				] . ": " . $data
-				;
+				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] . ": " . $data );
 				$this->debug ( "Ignoring SubOption negotiation (don't know what to do)" );
 				$this->telcmds ['received_opts'] [$opt] [$cmd] = $data;
 				break;
 			default :
-				$this->debug ( "< " . $this->TELCMDS[
-						$cmd
-				]
-				;
+				$this->debug ( "< " . $this->TELCMDS [$cmd] );
 				break;
 		}
 	}
