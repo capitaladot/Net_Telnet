@@ -887,7 +887,7 @@ class Net_Telnet {
 	 *        	Raw data to send as the SubOption Negotiation
 	 */
 	function send_telcmd($cmd = self::TEL_NOP, $opt = null, $data = null) {
-		if (! self::TELCMD_OK ( $cmd ))
+		if (! $this->TELCMD_OK ( $cmd ))
 			throw new \Exception ( "unknown TELNET command: " . ord ( $cmd ) );
 		
 		switch ($cmd) {
@@ -1714,7 +1714,7 @@ class Net_Telnet {
 						break;
 					case self::TEL_NOP :
 					default :
-						if (self::TELCMD_OK ( $c ))
+						if ($this->TELCMD_OK ( $c ))
 							$this->recv_telcmd ( $c );
 						break;
 				}
