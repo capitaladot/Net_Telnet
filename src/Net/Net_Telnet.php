@@ -211,7 +211,7 @@ class Net_Telnet {
 		$TEL_ABORT => "ABORT",
 		$TEL_SUSP => "SUSP",
 		$TEL_EOF => "EOF" 
-);
+	);
 
 /**
  * Tests for valid TELNET command.
@@ -257,8 +257,8 @@ function TELCMD_OK ($x)
 	protected $TELOPT_TUID =  26; /* TACACS user identification */
 	protected $TELOPT_OUTMRK =  27; /* output marking */
 	protected $TELOPT_TTYLOC =  28; /* terminal location number */
-	protected $TELOPT_3270REGIME = chr ( 29 ) ); /* 3270 regime */
-	protected $TELOPT_X3PAD = chr ( 30 ) ); /* X.3 PAD */
+	protected $TELOPT_3270REGIME = 29; /* 3270 regime */
+	protected $TELOPT_X3PAD = chr 30; /* X.3 PAD */
 	protected $TELOPT_NAWS =  31; /* window size */
 	protected $TELOPT_TSPEED =  32; /* terminal speed */
 	protected $TELOPT_LFLOW =  33; /* remote flow control */
@@ -270,10 +270,10 @@ function TELCMD_OK ($x)
 	protected $TELOPT_NEW_ENVIRON =  39; /* New - Environment variables */
 	protected $TELOPT_EXOPL =  255; /* extended-options-list */
 
-/**
- * TELNET option printable names.
- */
-private $TELOPTS = array (
+    /**
+     * TELNET option printable names.
+     */
+	private $TELOPTS = array (
 		$TELOPT_BINARY => "BINARY",
 		$TELOPT_ECHO => "ECHO",
 		$TELOPT_RCP => "RCP",
