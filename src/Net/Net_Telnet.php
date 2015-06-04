@@ -164,53 +164,53 @@ class Net_Telnet {
 	/**
 	 * Definitions for the TELNET protocol.
 	 */
-	protected $TEL_IAC = 255; // interpret as command:
-	protected $TEL_DONT =  254; //  you are not to use option 
-	protected $TEL_DO =  253; // please, you use option 
-	protected $TEL_WONT =  252; // I won't use option 
-	protected $TEL_WILL =  251; // I will use option 
-	protected $TEL_SB =  250; // interpret as subnegotiation 
-	protected $TEL_GA =  249; // you may reverse the line 
-	protected $TEL_EL =  248; // erase the current line 
-	protected $TEL_EC =  247; // erase the current character 
-	protected $TEL_AYT =  246; // are you there 
-	protected $TEL_AO =  245; // abort output--but let prog finish 
-	protected $TEL_IP =  244; // interrupt process--permanently 
-	protected $TEL_BREAK =  243; // break 
-	protected $TEL_DM =  242; // data mark--for connect. cleaning 
-	protected $TEL_NOP =  241; // nop 
-	protected $TEL_SE =  240; // end sub negotiation 
-	protected $TEL_EOR =  239; // end of record (transparent mode) 
-	protected $TEL_ABORT =  238; // Abort process 
-	protected $TEL_SUSP =  237; // Suspend process 
-	protected $TEL_EOF =  236; // End of file: EOF is already used... 
-	protected $TEL_SYNCH =  242; // for telfunc calls
-	protected $TEL_xEOF = 236; // Name compatible with bsd telnet.h  
+	const TEL_IAC = 255; // interpret as command:
+	const TEL_DONT =  254; //  you are not to use option 
+	const TEL_DO =  253; // please, you use option 
+	const TEL_WONT =  252; // I won't use option 
+	const TEL_WILL =  251; // I will use option 
+	const TEL_SB =  250; // interpret as subnegotiation 
+	const TEL_GA =  249; // you may reverse the line 
+	const TEL_EL =  248; // erase the current line 
+	const TEL_EC =  247; // erase the current character 
+	const TEL_AYT =  246; // are you there 
+	const TEL_AO =  245; // abort output--but let prog finish 
+	const TEL_IP =  244; // interrupt process--permanently 
+	const TEL_BREAK =  243; // break 
+	const TEL_DM =  242; // data mark--for connect. cleaning 
+	const TEL_NOP =  241; // nop 
+	const TEL_SE =  240; // end sub negotiation 
+	const TEL_EOR =  239; // end of record (transparent mode) 
+	const TEL_ABORT =  238; // Abort process 
+	const TEL_SUSP =  237; // Suspend process 
+	const TEL_EOF =  236; // End of file: EOF is already used... 
+	const TEL_SYNCH =  242; // for telfunc calls
+	const TEL_xEOF = 236; // Name compatible with bsd telnet.h  
 
 /**
  * TELNET command printable names.
  */
 	private $TELCMDS = array (
-		$TEL_IAC => "IAC",
-		$TEL_DONT => "DONT",
-		$TEL_DO => "DO",
-		$TEL_WONT => "WONT",
-		$TEL_WILL => "WILL",
-		$TEL_SB => "SB",
-		$TEL_GA => "GA",
-		$TEL_EL => "EL",
-		$TEL_EC => "EC",
-		$TEL_AYT => "AYT",
-		$TEL_AO => "AO",
-		$TEL_IP => "IP",
-		$TEL_BREAK => "BRK",
-		$TEL_DM => "DMARK",
-		$TEL_NOP => "NOP",
-		$TEL_SE => "SE",
-		$TEL_EOR => "EOR",
-		$TEL_ABORT => "ABORT",
-		$TEL_SUSP => "SUSP",
-		$TEL_EOF => "EOF" 
+		self::TEL_IAC => "IAC",
+		self::TEL_DONT => "DONT",
+		self::TEL_DO => "DO",
+		self::TEL_WONT => "WONT",
+		self::TEL_WILL => "WILL",
+		self::TEL_SB => "SB",
+		self::TEL_GA => "GA",
+		self::TEL_EL => "EL",
+		self::TEL_EC => "EC",
+		self::TEL_AYT => "AYT",
+		self::TEL_AO => "AO",
+		self::TEL_IP => "IP",
+		self::TEL_BREAK => "BRK",
+		self::TEL_DM => "DMARK",
+		self::TEL_NOP => "NOP",
+		self::TEL_SE => "SE",
+		self::TEL_EOR => "EOR",
+		self::TEL_ABORT => "ABORT",
+		self::TEL_SUSP => "SUSP",
+		self::TEL_EOF => "EOF" 
 	);
 
 /**
@@ -222,99 +222,119 @@ class Net_Telnet {
  */
 function TELCMD_OK ($x)
 {
-    return array_key_exists(chr($x), $this->TELCMDS);
+    return array_key_exists(chr($x), self::TELCMDS);
 }
 	
 	/**
 	 * TELNET options
 	 */
-	protected $TELOPT_BINARY =  0; /* 8-bit data path */
-	protected $TELOPT_ECHO =  1; /* echo */
-	protected $TELOPT_RCP =  2; /* prepare to reconnect */
-	protected $TELOPT_SGA =  3; /* suppress go ahead */
-	protected $TELOPT_NAMS =  4; /* approximate message size */
-	protected $TELOPT_STATUS =  5; /* give status */
-	protected $TELOPT_TM =  6; /* timing mark */
-	protected $TELOPT_RCTE =  7; /* remote controlled transmission and echo */
-	protected $TELOPT_NAOL =  8; /* negotiate about output line width */
-	protected $TELOPT_NAOP =  9; /* negotiate about output page size */
-	protected $TELOPT_NAOCRD =  10; /* negotiate about CR disposition */
-	protected $TELOPT_NAOHTS =  11; /* negotiate about horizontal tabstops */
-	protected $TELOPT_NAOHTD =  12; /* negotiate about horizontal tab disposition */
-	protected $TELOPT_NAOFFD =  13; /* negotiate about formfeed disposition */
-	protected $TELOPT_NAOVTS =  14; /* negotiate about vertical tab stops */
-	protected $TELOPT_NAOVTD =  15; /* negotiate about vertical tab disposition */
-	protected $TELOPT_NAOLFD =  16; /* negotiate about output LF disposition */
-	protected $TELOPT_XASCII =  17; /* extended ascii character set */
-	protected $TELOPT_LOGOUT =  18; /* force logout */
-	protected $TELOPT_BM =  19; /* byte macro */
-	protected $TELOPT_DET =  20; /* data entry terminal */
-	protected $TELOPT_SUPDUP =  21; /* supdup protocol */
-	protected $TELOPT_SUPDUPOUTPUT =  22; /* supdup output */
-	protected $TELOPT_SNDLOC =  23; /* send location */
-	protected $TELOPT_TTYPE =  24; /* terminal type */
-	protected $TELOPT_EOR =  25; /* end or record */
-	protected $TELOPT_TUID =  26; /* TACACS user identification */
-	protected $TELOPT_OUTMRK =  27; /* output marking */
-	protected $TELOPT_TTYLOC =  28; /* terminal location number */
-	protected $TELOPT_3270REGIME = 29; /* 3270 regime */
-	protected $TELOPT_X3PAD = chr 30; /* X.3 PAD */
-	protected $TELOPT_NAWS =  31; /* window size */
-	protected $TELOPT_TSPEED =  32; /* terminal speed */
-	protected $TELOPT_LFLOW =  33; /* remote flow control */
-	protected $TELOPT_LINEMODE =  34; /* Linemode option */
-	protected $TELOPT_XDISPLOC =  35; /* X Display Location */
-	protected $TELOPT_OLD_ENVIRON =  36; /* Old - Environment variables */
-	protected $TELOPT_AUTHENTICATION =  37; /* Authenticate */
-	protected $TELOPT_ENCRYPT =  38; /* Encryption option */
-	protected $TELOPT_NEW_ENVIRON =  39; /* New - Environment variables */
-	protected $TELOPT_EXOPL =  255; /* extended-options-list */
+	const TELOPT_BINARY =  0; /* 8-bit data path */
+	const TELOPT_ECHO =  1; /* echo */
+	const TELOPT_RCP =  2; /* prepare to reconnect */
+	const TELOPT_SGA =  3; /* suppress go ahead */
+	const TELOPT_NAMS =  4; /* approximate message size */
+	const TELOPT_STATUS =  5; /* give status */
+	const TELOPT_TM =  6; /* timing mark */
+	const TELOPT_RCTE =  7; /* remote controlled transmission and echo */
+	const TELOPT_NAOL =  8; /* negotiate about output line width */
+	const TELOPT_NAOP =  9; /* negotiate about output page size */
+	const TELOPT_NAOCRD =  10; /* negotiate about CR disposition */
+	const TELOPT_NAOHTS =  11; /* negotiate about horizontal tabstops */
+	const TELOPT_NAOHTD =  12; /* negotiate about horizontal tab disposition */
+	const TELOPT_NAOFFD =  13; /* negotiate about formfeed disposition */
+	const TELOPT_NAOVTS =  14; /* negotiate about vertical tab stops */
+	const TELOPT_NAOVTD =  15; /* negotiate about vertical tab disposition */
+	const TELOPT_NAOLFD =  16; /* negotiate about output LF disposition */
+	const TELOPT_XASCII =  17; /* extended ascii character set */
+	const TELOPT_LOGOUT =  18; /* force logout */
+	const TELOPT_BM =  19; /* byte macro */
+	const TELOPT_DET =  20; /* data entry terminal */
+	const TELOPT_SUPDUP =  21; /* supdup protocol */
+	const TELOPT_SUPDUPOUTPUT =  22; /* supdup output */
+	const TELOPT_SNDLOC =  23; /* send location */
+	const TELOPT_TTYPE =  24; /* terminal type */
+	const TELOPT_EOR =  25; /* end or record */
+	const TELOPT_TUID =  26; /* TACACS user identification */
+	const TELOPT_OUTMRK =  27; /* output marking */
+	const TELOPT_TTYLOC =  28; /* terminal location number */
+	const TELOPT_3270REGIME = 29; /* 3270 regime */
+	const TELOPT_X3PAD = chr 30;
+
+/* X.3 PAD */
+const TELOPT_NAWS = 31;
+
+/* window size */
+const TELOPT_TSPEED = 32;
+
+/* terminal speed */
+const TELOPT_LFLOW = 33;
+
+/* remote flow control */
+const TELOPT_LINEMODE = 34;
+
+/* Linemode option */
+const TELOPT_XDISPLOC = 35;
+
+/* X Display Location */
+const TELOPT_OLD_ENVIRON = 36;
+
+/* Old - Environment variables */
+const TELOPT_AUTHENTICATION = 37;
+
+/* Authenticate */
+const TELOPT_ENCRYPT = 38;
+
+/* Encryption option */
+const TELOPT_NEW_ENVIRON = 39;
+
+/* New - Environment variables */
+const TELOPT_EXOPL = 255; /* extended-options-list */
 
     /**
      * TELNET option printable names.
      */
 	private $TELOPTS = array (
-		$TELOPT_BINARY => "BINARY",
-		$TELOPT_ECHO => "ECHO",
-		$TELOPT_RCP => "RCP",
-		$TELOPT_SGA => "SUPPRESS GO AHEAD",
-		$TELOPT_NAMS => "NAME",
-		$TELOPT_STATUS => "STATUS",
-		$TELOPT_TM => "TIMING MARK",
-		$TELOPT_RCTE => "RCTE",
-		$TELOPT_NAOL => "NAOL",
-		$TELOPT_NAOP => "NAOP",
-		$TELOPT_NAOCRD => "NAOCRD",
-		$TELOPT_NAOHTS => "NAOHTS",
-		$TELOPT_NAOHTD => "NAOHTD",
-		$TELOPT_NAOFFD => "NAOFFD",
-		$TELOPT_NAOVTS => "NAOVTS",
-		$TELOPT_NAOVTD => "NAOVTD",
-		$TELOPT_NAOLFD => "NAOLFD",
-		$TELOPT_XASCII => "EXTEND ASCII",
-		$TELOPT_LOGOUT => "LOGOUT",
-		$TELOPT_BM => "BYTE MACRO",
-		$TELOPT_DET => "DATA ENTRY TERMINAL",
-		$TELOPT_SUPDUP => "SUPDUP",
-		$TELOPT_SUPDUPOUTPUT => "SUPDUP OUTPUT",
-		$TELOPT_SNDLOC => "SEND LOCATION",
-		$TELOPT_TTYPE => "TERMINAL TYPE",
-		$TELOPT_EOR => "END OF RECORD",
-		$TELOPT_TUID => "TACACS UID",
-		$TELOPT_OUTMRK => "OUTPUT MARKING",
-		$TELOPT_TTYLOC => "TTYLOC",
-		$TELOPT_3270REGIME => "3270 REGIME",
-		$TELOPT_X3PAD => "X.3 PAD",
-		$TELOPT_NAWS => "NAWS",
-		$TELOPT_TSPEED => "TSPEED",
-		$TELOPT_LFLOW => "LFLOW",
-		$TELOPT_LINEMODE => "LINEMODE",
-		$TELOPT_XDISPLOC => "XDISPLOC",
-		$TELOPT_OLD_ENVIRON => "OLD-ENVIRON",
-		$TELOPT_AUTHENTICATION => "AUTHENTICATION",
-		$TELOPT_ENCRYPT => "ENCRYPT",
-		$TELOPT_NEW_ENVIRON => "NEW-ENVIRON",
-		$TELOPT_EXOPL => "EXTENDED OPTIONS LIST" 
+		self::TELOPT_BINARY => "BINARY",
+		self::TELOPT_ECHO => "ECHO",
+		self::TELOPT_RCP => "RCP",
+		self::TELOPT_SGA => "SUPPRESS GO AHEAD",
+		self::TELOPT_NAMS => "NAME",
+		self::TELOPT_STATUS => "STATUS",
+		self::TELOPT_TM => "TIMING MARK",
+		self::TELOPT_RCTE => "RCTE",
+		self::TELOPT_NAOL => "NAOL",
+		self::TELOPT_NAOP => "NAOP",
+		self::TELOPT_NAOCRD => "NAOCRD",
+		self::TELOPT_NAOHTS => "NAOHTS",
+		self::TELOPT_NAOHTD => "NAOHTD",
+		self::TELOPT_NAOFFD => "NAOFFD",
+		self::TELOPT_NAOVTS => "NAOVTS",
+		self::TELOPT_NAOVTD => "NAOVTD",
+		self::TELOPT_NAOLFD => "NAOLFD",
+		self::TELOPT_XASCII => "EXTEND ASCII",
+		self::TELOPT_LOGOUT => "LOGOUT",
+		self::TELOPT_BM => "BYTE MACRO",
+		self::TELOPT_DET => "DATA ENTRY TERMINAL",
+		self::TELOPT_SUPDUP => "SUPDUP",
+		self::TELOPT_SUPDUPOUTPUT => "SUPDUP OUTPUT",
+		self::TELOPT_SNDLOC => "SEND LOCATION",
+		self::TELOPT_TTYPE => "TERMINAL TYPE",
+		self::TELOPT_EOR => "END OF RECORD",
+		self::TELOPT_TUID => "TACACS UID",
+		self::TELOPT_OUTMRK => "OUTPUT MARKING",
+		self::TELOPT_TTYLOC => "TTYLOC",
+		self::TELOPT_3270REGIME => "3270 REGIME",
+		self::TELOPT_X3PAD => "X.3 PAD",
+		self::TELOPT_NAWS => "NAWS",
+		self::TELOPT_TSPEED => "TSPEED",
+		self::TELOPT_LFLOW => "LFLOW",
+		self::TELOPT_LINEMODE => "LINEMODE",
+		self::TELOPT_XDISPLOC => "XDISPLOC",
+		self::TELOPT_OLD_ENVIRON => "OLD-ENVIRON",
+		self::TELOPT_AUTHENTICATION => "AUTHENTICATION",
+		self::TELOPT_ENCRYPT => "ENCRYPT",
+		self::TELOPT_NEW_ENVIRON => "NEW-ENVIRON",
+		self::TELOPT_EXOPL => "EXTENDED OPTIONS LIST" 
 );
 
 /**
@@ -324,23 +344,23 @@ function TELCMD_OK ($x)
  *        	value to test as a TELNET option
  * @return boolean
  */
-function $this->TELOPT_OK($x) {
-	return array_key_exists ( chr($x), $this->TELOPTS );
+function self::TELOPT_OK($x) {
+	return array_key_exists ( chr($x), self::TELOPTS );
 }
 	
 	/**
 	 * sub-option qualifiers
 	 */
-	protected $TELQUAL_IS =  0; /* option is... */
-	protected $TELQUAL_SEND =  1; /* send option */
-	protected $TELQUAL_INFO =  2; /* ENVIRON: informational version of IS */
-	protected $TELQUAL_REPLY =  2; /* AUTHENTICATION: client version of IS */
-	protected $TELQUAL_NAME =  3; /* AUTHENTICATION: client version of IS */
+	const TELQUAL_IS =  0; /* option is... */
+	const TELQUAL_SEND =  1; /* send option */
+	const TELQUAL_INFO =  2; /* ENVIRON: informational version of IS */
+	const TELQUAL_REPLY =  2; /* AUTHENTICATION: client version of IS */
+	const TELQUAL_NAME =  3; /* AUTHENTICATION: client version of IS */
 	
-	protected $LFLOW_OFF =  0; /* Disable remote flow control */
-	protected $LFLOW_ON =  1; /* Enable remote flow control */
-	protected $LFLOW_RESTART_ANY =  2; /* Restart output on any char */
-	protected $LFLOW_RESTART_XON =  3; /* Restart output only on XON */
+	const LFLOW_OFF =  0; /* Disable remote flow control */
+	const LFLOW_ON =  1; /* Enable remote flow control */
+	const LFLOW_RESTART_ANY =  2; /* Restart output on any char */
+	const LFLOW_RESTART_XON =  3; /* Restart output only on XON */
 
 /**
  * Prints debug messages if debug mode is enbled
@@ -537,14 +557,14 @@ function echomode($mode = null) {
 		case "local" :
 			if ($this->mode ['echo_remote']) {
 				$this->debug ( "Disabling Remote Echo" );
-				$this->send_telcmd ( $this->TEL_DONT, TELOPT_ECHO );
+				$this->send_telcmd ( self::TEL_DONT, self::TELOPT_ECHO );
 				$this->mode ['echo_remote'] = false;
 			}
 			break;
 		case "remote" :
 			if (! $this->mode ['echo_remote']) {
 				$this->debug ( "Requesting Remote Echo" );
-				$this->send_telcmd ( $this->TEL_DO, TELOPT_ECHO );
+				$this->send_telcmd ( self::TEL_DO, self::TELOPT_ECHO );
 				
 				if (! $this->mode ['echo_local']) {
 					$this->debug ( "Enabling Local Echo" );
@@ -559,7 +579,7 @@ function echomode($mode = null) {
 			}
 			if ($this->mode ['echo_remote']) {
 				$this->debug ( "Disabling Remote Echo" );
-				$this->send_telcmd ( $this->TEL_DONT, TELOPT_ECHO );
+				$this->send_telcmd ( self::TEL_DONT, self::TELOPT_ECHO );
 				$this->mode ['echo_remote'] = false;
 			}
 			break;
@@ -724,7 +744,7 @@ function initial_options() {
 		 * though rfc858 says it must be suppressed in
 		 * both directions independently.
 		 */
-		$this->send_telcmd ( $this->TEL_WILL, TELOPT_SGA );
+		$this->send_telcmd ( self::TEL_WILL, self::TELOPT_SGA );
 	}
 	
 	switch ($this->mode ['echomode']) {
@@ -733,8 +753,8 @@ function initial_options() {
 			break;
 		case "remote" :
 		default :
-			$this->send_telcmd ( $this->TEL_DO, TELOPT_ECHO );
-			$this->send_telcmd ( $this->TEL_DO, TELOPT_SGA );
+			$this->send_telcmd ( self::TEL_DO, self::TELOPT_ECHO );
+			$this->send_telcmd ( self::TEL_DO, self::TELOPT_SGA );
 			break;
 	}
 	
@@ -743,8 +763,8 @@ function initial_options() {
 		 * Working around a buggy telnet that strips the BINARY
 		 * (ie. ASCII 0) out of the datastream by not requesting it.
 		 */
-		$this->send_telcmd ( $this->TEL_DO, TELOPT_BINARY );
-		$this->send_telcmd ( $this->TEL_WILL, TELOPT_BINARY );
+		$this->send_telcmd ( self::TEL_DO, self::TELOPT_BINARY );
+		$this->send_telcmd ( self::TEL_WILL, self::TELOPT_BINARY );
 	}
 	
 	$this->net_write ();
@@ -763,43 +783,43 @@ function initial_options() {
  * @param string $data
  *        	Raw data to send as the SubOption Negotiation
  */
-function send_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
-	if (! $this->TELCMD_OK ( $cmd ))
+function send_telcmd($cmd = self::TEL_NOP, $opt = null, $data = null) {
+	if (! self::TELCMD_OK ( $cmd ))
 		throw new Exception ( "unknown TELNET command: " . ord ( $cmd ) );
 	
 	switch ($cmd) {
-		case $this->TEL_WILL :
-		case $this->TEL_WONT :
-		case $this->TEL_DO :
-		case $this->TEL_DONT :
-			if (! $this->TELOPT_OK ( $opt ))
+		case self::TEL_WILL :
+		case self::TEL_WONT :
+		case self::TEL_DO :
+		case self::TEL_DONT :
+			if (! self::TELOPT_OK ( $opt ))
 				throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 			
-			$this->debug ( "> " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
+			$this->debug ( "> " . self::TELCMDS [$cmd] . " " . self::TELOPTS [$opt] );
 			
 			$this->telcmds ['sent'] [$opt] [$cmd] = true;
-			$this->put_data ( $this->TEL_IAC . $cmd . $opt, false, false );
+			$this->put_data ( self::TEL_IAC . $cmd . $opt, false, false );
 			break;
-		case $this->TEL_NOP :
-			$this->debug ( "> " . $this->TELCMDS [$cmd] );
-			$this->put_data ( $this->TEL_IAC . $cmd . $opt, false, false );
+		case self::TEL_NOP :
+			$this->debug ( "> " . self::TELCMDS [$cmd] );
+			$this->put_data ( self::TEL_IAC . $cmd . $opt, false, false );
 			break;
-		case $this->TEL_SB :
-			if (! $this->TELOPT_OK ( $opt ))
+		case self::TEL_SB :
+			if (! self::TELOPT_OK ( $opt ))
 				throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
-			$this->debug ( "> " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] . " " . $data ); // how to print/format this nicely?
+			$this->debug ( "> " . self::TELCMDS [$cmd] . " " . self::TELOPTS [$opt] . " " . $data ); // how to print/format this nicely?
 			                                                                               
 			// Escape IAC char
 			$data = preg_replace ( '/\xff/', "\xff\xff", $data );
 			
 			$this->telcmds ['sent_opts'] [$opt] [$cmd] = $data;
-			$this->put_data ( $this->TEL_IAC . $this->TEL_SB . $opt . $data . $this->TEL_IAC . $this->TEL_SE, false, false );
+			$this->put_data ( self::TEL_IAC . self::TEL_SB . $opt . $data . self::TEL_IAC . self::TEL_SE, false, false );
 			break;
-		case $this->TEL_SE :
+		case self::TEL_SE :
 			throw new Exception ( "don't send SE, send SB and I'll add the SE" );
 			break;
 		default :
-			throw new Exception ( "don't know how to handle " . $this->TELCMDS [$cmd] . " command" );
+			throw new Exception ( "don't know how to handle " . self::TELCMDS [$cmd] . " command" );
 			break;
 	}
 }
@@ -814,30 +834,30 @@ function send_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
  * @param string $data
  *        	Raw data read in SubOption Negotiation
  */
-function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
+function recv_telcmd($cmd = self::TEL_NOP, $opt = null, $data = null) {
 	if (! TELCMD_OK ( $cmd ))
 		throw new Exception ( "unknown TELNET command: " . ord ( $cmd ) );
 	
 	switch ($cmd) {
-		case $this->TEL_WILL :
-			if (! $this->TELOPT_OK ( $opt ))
+		case self::TEL_WILL :
+			if (! self::TELOPT_OK ( $opt ))
 				throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 			$this->telcmds ['received'] [$opt] [$cmd] = true;
-			$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
+			$this->debug ( "< " . self::TELCMDS [$cmd] . " " . self::TELOPTS [$opt] );
 			switch ($opt) {
-				case $this->TELOPT_BINARY :
+				case self::TELOPT_BINARY :
 					if ($this->mode ['rx_binmode']) {
 						continue;
 					}
 					
 					// maybe should default to "DO" but needs testing
-					if (array_key_exists ( $this->TEL_DO, $this->telcmds ['sent'] [$opt] )) {
+					if (array_key_exists ( self::TEL_DO, $this->telcmds ['sent'] [$opt] )) {
 						$this->mode ['rx_binmode'] = true;
 						$this->debug ( "Enabling Binary Mode on receive" );
 					} else
-						$this->send_telcmd ( $this->TEL_DONT, $opt );
+						$this->send_telcmd ( self::TEL_DONT, $opt );
 					break;
-				case $this->TELOPT_ECHO :
+				case self::TELOPT_ECHO :
 					if ($this->mode ['echo_remote']) {
 						continue;
 					}
@@ -846,7 +866,7 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 						case "local" :
 						case "none" :
 							$this->debug ( "Refusing Remote Echo" );
-							$this->send_telcmd ( $this->TEL_DONT, $opt );
+							$this->send_telcmd ( self::TEL_DONT, $opt );
 							break;
 						case "remote" :
 						default :
@@ -857,16 +877,16 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 							if ($this->mode ['echo_net']) {
 								$this->debug ( "Disabling Local Network Echo" );
 								$this->mode ['echo_net'] = false;
-								$this->send_telcmd ( $this->TEL_WONT, $opt );
+								$this->send_telcmd ( self::TEL_WONT, $opt );
 							}
 							
-							if (! array_key_exists ( $this->TEL_DO, $this->telcmds ['sent'] [$opt] ))
-								$this->send_telcmd ( $this->TEL_DO, $opt );
+							if (! array_key_exists ( self::TEL_DO, $this->telcmds ['sent'] [$opt] ))
+								$this->send_telcmd ( self::TEL_DO, $opt );
 							break;
 					}
 					
 					break;
-				case $this->TELOPT_SGA :
+				case self::TELOPT_SGA :
 					if ($this->mode ['rx_sga']) {
 						continue;
 					}
@@ -878,30 +898,30 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 						$this->debug ( "Enabling Suppress Go Ahead (SGA) on Transmit" );
 						$this->mode ['tx_sga'] = true;
 						
-						if (! array_key_exists ( $this->TEL_WILL, $this->telcmds ['sent'] [$opt] ))
-							$this->send_telcmd ( $this->TEL_WILL, $opt );
+						if (! array_key_exists ( self::TEL_WILL, $this->telcmds ['sent'] [$opt] ))
+							$this->send_telcmd ( self::TEL_WILL, $opt );
 					}
 					
-					if (! array_key_exists ( $this->TEL_DO, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_DO, $opt );
+					if (! array_key_exists ( self::TEL_DO, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_DO, $opt );
 					break;
-				case $this->TELOPT_STATUS :
-				case $this->TELOPT_TM :
+				case self::TELOPT_STATUS :
+				case self::TELOPT_TM :
 					break;
-				case $this->TELOPT_EXOPL :
-					$this->send_telcmd ( $this->TEL_DONT, $opt );
+				case self::TELOPT_EXOPL :
+					$this->send_telcmd ( self::TEL_DONT, $opt );
 					break;
 				default :
 					break;
 			}
 			break;
-		case $this->TEL_WONT :
-			if (! $this->TELOPT_OK ( $opt ))
+		case self::TEL_WONT :
+			if (! self::TELOPT_OK ( $opt ))
 				throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 			$this->telcmds ['received'] [$opt] [$cmd] = true;
-			$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
+			$this->debug ( "< " . self::TELCMDS [$cmd] . " " . self::TELOPTS [$opt] );
 			switch ($opt) {
-				case $this->TELOPT_BINARY :
+				case self::TELOPT_BINARY :
 					if (! $this->mode ['rx_binmode']) {
 						continue;
 					}
@@ -909,10 +929,10 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 					$this->debug ( "Disabling Binary Mode on receive" );
 					$this->mode ['rx_binmode'] = false;
 					
-					if (! array_key_exists ( $this->TEL_DONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_DONT, $opt );
+					if (! array_key_exists ( self::TEL_DONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_DONT, $opt );
 					break;
-				case $this->TELOPT_ECHO :
+				case self::TELOPT_ECHO :
 					if (! $this->mode ['echo_remote']) {
 						continue;
 					}
@@ -924,10 +944,10 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 							break;
 					}
 					
-					if (! array_key_exists ( $this->TEL_DONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_DONT, $opt );
+					if (! array_key_exists ( self::TEL_DONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_DONT, $opt );
 					break;
-				case $this->TELOPT_SGA :
+				case self::TELOPT_SGA :
 					if (! $this->mode ['rx_sga']) {
 						continue;
 					}
@@ -937,7 +957,7 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 					
 					if ($this->mode ['echo_remote']) {
 						$this->debug ( "Disabling Remote Echo" );
-						$this->send_telcmd ( $this->TEL_DONT, TELOPT_ECHO );
+						$this->send_telcmd ( self::TEL_DONT, TELOPT_ECHO );
 						$this->mode ['echo_remote'] = false;
 						
 						if ($this->mode ['echomode'] == "remote") {
@@ -950,40 +970,40 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 						$this->debug ( "Disabling Suppress Go Ahead (SGA) on Transmit" . " (workaround for broken TELNETs)" );
 						$this->mode ['tx_sga'] = false;
 						
-						if (! array_key_exists ( $this->TEL_WONT, $this->telcmds ['sent'] [$opt] ))
-							$this->send_telcmd ( $this->TEL_WONT, $opt );
+						if (! array_key_exists ( self::TEL_WONT, $this->telcmds ['sent'] [$opt] ))
+							$this->send_telcmd ( self::TEL_WONT, $opt );
 					}
 					
-					if (! array_key_exists ( $this->TEL_DONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_DONT, $opt );
+					if (! array_key_exists ( self::TEL_DONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_DONT, $opt );
 					break;
-				case $this->TELOPT_STATUS :
-				case $this->TELOPT_TM :
-				case $this->TELOPT_EXOPL :
+				case self::TELOPT_STATUS :
+				case self::TELOPT_TM :
+				case self::TELOPT_EXOPL :
 					break;
 				default :
 					break;
 			}
 			break;
-		case $this->TEL_DO :
-			if (! $this->TELOPT_OK ( $opt ))
+		case self::TEL_DO :
+			if (! self::TELOPT_OK ( $opt ))
 				throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 			$this->telcmds ['received'] [$opt] [$cmd] = true;
-			$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
+			$this->debug ( "< " . self::TELCMDS [$cmd] . " " . self::TELOPTS [$opt] );
 			switch ($opt) {
-				case $this->TELOPT_BINARY :
+				case self::TELOPT_BINARY :
 					if ($this->mode ['rx_binmode']) {
 						continue;
 					}
 					
 					// maybe should default to "WILL" but needs testing
-					if (array_key_exists ( $this->TEL_WILL, $this->telcmds ['sent'] [$opt] )) {
+					if (array_key_exists ( self::TEL_WILL, $this->telcmds ['sent'] [$opt] )) {
 						$this->mode ['tx_binmode'] = true;
 						$this->debug ( "Enabling Binary Mode on transmit" );
 					} else
-						$this->send_telcmd ( $this->TEL_WONT, $opt );
+						$this->send_telcmd ( self::TEL_WONT, $opt );
 					break;
-				case $this->TELOPT_ECHO :
+				case self::TELOPT_ECHO :
 					if ($this->mode ['echo_net']) {
 						continue;
 					}
@@ -991,7 +1011,7 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 					if ($this->mode ['echo_remote']) {
 						$this->debug ( "Disabling Remote Echo to prevent Echo loop" );
 						$this->mode ['echo_remote'] = false;
-						$this->send_telcmd ( $this->TEL_DONT, $opt );
+						$this->send_telcmd ( self::TEL_DONT, $opt );
 					}
 					
 					switch ($this->mode ['echomode']) {
@@ -1005,10 +1025,10 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 					$this->debug ( "Enabling Local Network Echo" );
 					$this->mode ['echo_net'] = true;
 					
-					if (! array_key_exists ( $this->TEL_WILL, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_WILL, $opt );
+					if (! array_key_exists ( self::TEL_WILL, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_WILL, $opt );
 				
-				case $this->TELOPT_SGA :
+				case self::TELOPT_SGA :
 					if ($this->mode ['tx_sga']) {
 						continue;
 					}
@@ -1019,34 +1039,34 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 					if ($this->mode ['telnet_bugs'] && ! $this->mode ['rx_sga']) {
 						$this->debug ( "Enabling Suppress Go Ahead (SGA) on Receive" . " (workaround for broken TELNETs)" );
 						$this->mode ['rx_sga'] = true;
-						if (! array_key_exists ( $this->TEL_DO, $this->telcmds ['sent'] [$opt] ))
-							$this->send_telcmd ( $this->TEL_DO, $opt );
+						if (! array_key_exists ( self::TEL_DO, $this->telcmds ['sent'] [$opt] ))
+							$this->send_telcmd ( self::TEL_DO, $opt );
 					}
 					
-					if (! array_key_exists ( $this->TEL_WILL, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_WILL, $opt );
+					if (! array_key_exists ( self::TEL_WILL, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_WILL, $opt );
 					break;
-				case $this->TELOPT_STATUS :
-					$this->send_telcmd ( $this->TEL_WONT, $opt );
+				case self::TELOPT_STATUS :
+					$this->send_telcmd ( self::TEL_WONT, $opt );
 					break;
-				case $this->TELOPT_TM :
-					$this->send_telcmd ( $this->TEL_WILL, $opt );
+				case self::TELOPT_TM :
+					$this->send_telcmd ( self::TEL_WILL, $opt );
 					break;
-				case $this->TELOPT_EXOPL :
-					$this->send_telcmd ( $this->TEL_WONT, $opt );
+				case self::TELOPT_EXOPL :
+					$this->send_telcmd ( self::TEL_WONT, $opt );
 					break;
 				default :
-					$this->send_telcmd ( $this->TEL_WONT, $opt );
+					$this->send_telcmd ( self::TEL_WONT, $opt );
 					break;
 			}
 			break;
-		case $this->TEL_DONT :
-			if (! $this->TELOPT_OK ( $opt ))
+		case self::TEL_DONT :
+			if (! self::TELOPT_OK ( $opt ))
 				throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
 			$this->telcmds ['received'] [$opt] [$cmd] = true;
-			$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
+			$this->debug ( "< " . self::TELCMDS [$cmd] . " " . self::TELOPTS [$opt] );
 			switch ($opt) {
-				case $this->TELOPT_BINARY :
+				case self::TELOPT_BINARY :
 					if (! $this->mode ['tx_binmode']) {
 						continue;
 					}
@@ -1054,10 +1074,10 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 					$this->debug ( "Disabling Binary Mode on transmit" );
 					$this->mode ['tx_binmode'] = false;
 					
-					if (! array_key_exists ( $this->TEL_WONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_WONT, $opt );
+					if (! array_key_exists ( self::TEL_WONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_WONT, $opt );
 					break;
-				case $this->TELOPT_ECHO :
+				case self::TELOPT_ECHO :
 					if (! $this->mode ['echo_net']) {
 						continue;
 					}
@@ -1065,10 +1085,10 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 					$this->debug ( "Disabling Local Network Echo" );
 					$this->mode ['echo_net'] = false;
 					
-					if (! array_key_exists ( $this->TEL_WONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_WONT, $opt );
+					if (! array_key_exists ( self::TEL_WONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_WONT, $opt );
 					break;
-				case $this->TELOPT_SGA :
+				case self::TELOPT_SGA :
 					if (! $this->mode ['tx_sga']) {
 						continue;
 					}
@@ -1079,12 +1099,12 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 					if ($this->mode ['telnet_bugs'] && $this->mode ['rx_sga']) {
 						$this->debug ( "Disabling Suppress Go Ahead (SGA) on Receive" . " (workaround for broken TELNETs)" );
 						$this->mode ['rx_sga'] = false;
-						if (! array_key_exists ( $this->TEL_DONT, $this->telcmds ['sent'] [$opt] ))
-							$this->send_telcmd ( $this->TEL_DONT, $opt );
+						if (! array_key_exists ( self::TEL_DONT, $this->telcmds ['sent'] [$opt] ))
+							$this->send_telcmd ( self::TEL_DONT, $opt );
 						
 						if ($this->mode ['echo_remote']) {
 							$this->debug ( "Disabling Remote Echo" );
-							$this->send_telcmd ( $this->TEL_DONT, TELOPT_ECHO );
+							$this->send_telcmd ( self::TEL_DONT, TELOPT_ECHO );
 							$this->mode ['echo_remote'] = false;
 							
 							if ($this->mode ['echomode'] == "remote") {
@@ -1094,25 +1114,25 @@ function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 						}
 					}
 					
-					if (! array_key_exists ( $this->TEL_WONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( $this->TEL_WONT, $opt );
+					if (! array_key_exists ( self::TEL_WONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( self::TEL_WONT, $opt );
 					break;
-				case $this->TELOPT_STATUS :
-				case $this->TELOPT_TM :
-				case $this->TELOPT_EXOPL :
+				case self::TELOPT_STATUS :
+				case self::TELOPT_TM :
+				case self::TELOPT_EXOPL :
 				default :
 					break;
 			}
 			break;
-		case $this->TEL_SB :
-			if (! $this->TELOPT_OK ( $opt ))
+		case self::TEL_SB :
+			if (! self::TELOPT_OK ( $opt ))
 				throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
-			$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] . ": " . $data );
+			$this->debug ( "< " . self::TELCMDS [$cmd] . " " . self::TELOPTS [$opt] . ": " . $data );
 			$this->debug ( "Ignoring SubOption negotiation (don't know what to do)" );
 			$this->telcmds ['received_opts'] [$opt] [$cmd] = $data;
 			break;
 		default :
-			$this->debug ( "< " . $this->TELCMDS [$cmd] );
+			$this->debug ( "< " . self::TELCMDS [$cmd] );
 			break;
 	}
 }
@@ -1129,7 +1149,7 @@ function go_ahead() {
 	else if ($this->GA) {
 		$this->net_write ();
 		if ($this->mode ['telnet']) {
-			$this->net_write ( $this->TEL_IAC . $this->TEL_GA );
+			$this->net_write ( self::TEL_IAC . self::TEL_GA );
 			$this->GA = false;
 		}
 	} else
@@ -1147,7 +1167,7 @@ function go_ahead() {
  * @return s boolean indicates if data was written
  */
 function send_break() {
-	$this->writebuf .= $this->TEL_IAC . $this->TEL_BREAK;
+	$this->writebuf .= self::TEL_IAC . self::TEL_BREAK;
 	return ($this->net_write () > 0) ? true : false;
 }
 
@@ -1494,7 +1514,7 @@ function read_stream($searchfor = null, $numbytes = null, $timeout = null) {
 				throw new Exception ( "Error reading from network" );
 		}
 		
-		if ($this->mode ['telnet'] && $c == $this->TEL_IAC) { /* Interpret As Command */
+		if ($this->mode ['telnet'] && $c == self::TEL_IAC) { /* Interpret As Command */
 			if (! feof ( $s ) && ($c = fgetc ( $s )) === false) {
 				$info = stream_get_meta_data ( $s );
 				
@@ -1513,13 +1533,13 @@ function read_stream($searchfor = null, $numbytes = null, $timeout = null) {
 			}
 			
 			switch ($c) {
-				case $this->TEL_IAC :
+				case self::TEL_IAC :
 					$buf .= $c;
 					break;
-				case $this->TEL_WILL :
-				case $this->TEL_WONT :
-				case $this->TEL_DO :
-				case $this->TEL_DONT :
+				case self::TEL_WILL :
+				case self::TEL_WONT :
+				case self::TEL_DO :
+				case self::TEL_DONT :
 					if (! feof ( $s ) && ($opt = fgetc ( $s )) === false) {
 						$info = stream_get_meta_data ( $s );
 						
@@ -1531,22 +1551,22 @@ function read_stream($searchfor = null, $numbytes = null, $timeout = null) {
 							else
 								continue;
 						else if ($this->mode ['telnet_bugs']) {
-							$this->debug ( "Error reading TELNET option " . " char for {$this->TELCMDS[$c]} command" );
+							$this->debug ( "Error reading TELNET option " . " char for {self::TELCMDS[$c]} command" );
 							continue;
 						} else {
-							throw new Exception ( "Error reading TELNET option " . " char for {$this->TELCMDS[$c]} command" );
+							throw new Exception ( "Error reading TELNET option " . " char for {self::TELCMDS[$c]} command" );
 						}
 					}
 					
 					$this->recv_telcmd ( $c, $opt );
 					
 					break;
-				case $this->TEL_SB :
+				case self::TEL_SB :
 					$telcmd = $c;
 					$subopt = null;
 					$data = $c;
 					
-					while ( ! feof ( $s ) && ($c != $this->TEL_SE) && (($c = fgetc ( $s )) !== false) ) {
+					while ( ! feof ( $s ) && ($c != self::TEL_SE) && (($c = fgetc ( $s )) !== false) ) {
 						if ($subopt === null)
 							$subopt = $c;
 						
@@ -1570,21 +1590,21 @@ function read_stream($searchfor = null, $numbytes = null, $timeout = null) {
 					}
 					$this->recv_telcmd ( $telcmd, $subopt, $data );
 					break;
-				case $this->TEL_GA :
+				case self::TEL_GA :
 					$this->GA = true;
 					$this->net_write ();
 					break;
-				case $this->TEL_AO :
+				case self::TEL_AO :
 					$this->debug ( "Received TELNET Abort Output (AO), clearing read buffers" );
 					$this->userbuf = '';
 					$buf = '';
 					break;
-				case $this->TEL_IP :
+				case self::TEL_IP :
 					throw new Exception ( "Received TELNET Interrupt Process (IP)" );
 					break;
-				case $this->TEL_NOP :
+				case self::TEL_NOP :
 				default :
-					if (TELCMD_OK ( $c ))
+					if (self::TELCMD_OK ( $c ))
 						$this->recv_telcmd ( $c );
 					break;
 			}
