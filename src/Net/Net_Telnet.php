@@ -167,49 +167,49 @@ class Net_Telnet
      * Definitions for the TELNET protocol.
      */
     const TEL_IAC = 255;
- // interpret as command:
+    // interpret as command:
     const TEL_DONT = 254;
- // you are not to use option
+    // you are not to use option
     const TEL_DO = 253;
- // please, you use option
+    // please, you use option
     const TEL_WONT = 252;
- // I won't use option
+    // I won't use option
     const TEL_WILL = 251;
- // I will use option
+    // I will use option
     const TEL_SB = 250;
- // interpret as subnegotiation
+    // interpret as subnegotiation
     const TEL_GA = 249;
- // you may reverse the line
+    // you may reverse the line
     const TEL_EL = 248;
- // erase the current line
+    // erase the current line
     const TEL_EC = 247;
- // erase the current character
+    // erase the current character
     const TEL_AYT = 246;
- // are you there
+    // are you there
     const TEL_AO = 245;
- // abort output--but let prog finish
+    // abort output--but let prog finish
     const TEL_IP = 244;
- // interrupt process--permanently
+    // interrupt process--permanently
     const TEL_BREAK = 243;
- // break
+    // break
     const TEL_DM = 242;
- // data mark--for connect. cleaning
+    // data mark--for connect. cleaning
     const TEL_NOP = 241;
- // nop
+    // nop
     const TEL_SE = 240;
- // end sub negotiation
+    // end sub negotiation
     const TEL_EOR = 239;
- // end of record (transparent mode)
+    // end of record (transparent mode)
     const TEL_ABORT = 238;
- // Abort process
+    // Abort process
     const TEL_SUSP = 237;
- // Suspend process
+    // Suspend process
     const TEL_EOF = 236;
- // End of file: EOF is already used...
+    // End of file: EOF is already used...
     const TEL_SYNCH = 242;
- // for telfunc calls
+    // for telfunc calls
     const TEL_xEOF = 236;
- // Name compatible with bsd telnet.h
+    // Name compatible with bsd telnet.h
     
     /**
      * TELNET command printable names.
@@ -246,72 +246,102 @@ class Net_Telnet
      */
     function TELCMD_OK ($x)
     {
-        return array_key_exists(chr($x), self::TELCMDS);
+        return array_key_exists(chr($x), $this->TELCMDS);
     }
 
     /**
      * TELNET options
      */
     const TELOPT_BINARY = 0;
- /* 8-bit data path */
+
+    /* 8-bit data path */
     const TELOPT_ECHO = 1;
- /* echo */
+
+    /* echo */
     const TELOPT_RCP = 2;
- /* prepare to reconnect */
+
+    /* prepare to reconnect */
     const TELOPT_SGA = 3;
- /* suppress go ahead */
+
+    /* suppress go ahead */
     const TELOPT_NAMS = 4;
- /* approximate message size */
+
+    /* approximate message size */
     const TELOPT_STATUS = 5;
- /* give status */
+
+    /* give status */
     const TELOPT_TM = 6;
- /* timing mark */
+
+    /* timing mark */
     const TELOPT_RCTE = 7;
- /* remote controlled transmission and echo */
+
+    /* remote controlled transmission and echo */
     const TELOPT_NAOL = 8;
- /* negotiate about output line width */
+
+    /* negotiate about output line width */
     const TELOPT_NAOP = 9;
- /* negotiate about output page size */
+
+    /* negotiate about output page size */
     const TELOPT_NAOCRD = 10;
- /* negotiate about CR disposition */
+
+    /* negotiate about CR disposition */
     const TELOPT_NAOHTS = 11;
- /* negotiate about horizontal tabstops */
+
+    /* negotiate about horizontal tabstops */
     const TELOPT_NAOHTD = 12;
- /* negotiate about horizontal tab disposition */
+
+    /* negotiate about horizontal tab disposition */
     const TELOPT_NAOFFD = 13;
- /* negotiate about formfeed disposition */
+
+    /* negotiate about formfeed disposition */
     const TELOPT_NAOVTS = 14;
- /* negotiate about vertical tab stops */
+
+    /* negotiate about vertical tab stops */
     const TELOPT_NAOVTD = 15;
- /* negotiate about vertical tab disposition */
+
+    /* negotiate about vertical tab disposition */
     const TELOPT_NAOLFD = 16;
- /* negotiate about output LF disposition */
+
+    /* negotiate about output LF disposition */
     const TELOPT_XASCII = 17;
- /* extended ascii character set */
+
+    /* extended ascii character set */
     const TELOPT_LOGOUT = 18;
- /* force logout */
+
+    /* force logout */
     const TELOPT_BM = 19;
- /* byte macro */
+
+    /* byte macro */
     const TELOPT_DET = 20;
- /* data entry terminal */
+
+    /* data entry terminal */
     const TELOPT_SUPDUP = 21;
- /* supdup protocol */
+
+    /* supdup protocol */
     const TELOPT_SUPDUPOUTPUT = 22;
- /* supdup output */
+
+    /* supdup output */
     const TELOPT_SNDLOC = 23;
- /* send location */
+
+    /* send location */
     const TELOPT_TTYPE = 24;
- /* terminal type */
+
+    /* terminal type */
     const TELOPT_EOR = 25;
- /* end or record */
+
+    /* end or record */
     const TELOPT_TUID = 26;
- /* TACACS user identification */
+
+    /* TACACS user identification */
     const TELOPT_OUTMRK = 27;
- /* output marking */
+
+    /* output marking */
     const TELOPT_TTYLOC = 28;
- /* terminal location number */
+
+    /* terminal location number */
     const TELOPT_3270REGIME = 29;
- /* 3270 regime */
+
+    /* 3270 regime */
     const TELOPT_X3PAD = 30;
 
     /* X.3 PAD */
@@ -343,7 +373,8 @@ class Net_Telnet
 
     /* New - Environment variables */
     const TELOPT_EXOPL = 255;
- /* extended-options-list */
+
+    /* extended-options-list */
     
     /**
      * TELNET option printable names.
@@ -401,7 +432,7 @@ class Net_Telnet
      */
     function TELOPT_OK ($x)
     {
-        return array_key_exists(chr($x), self::TELOPTS);
+        return array_key_exists(chr($x), $this->TELOPTS);
     }
 
     /**
@@ -906,35 +937,38 @@ class Net_Telnet
                 if (! self::TELOPT_OK($opt))
                     throw new Exception("invalid TELNET option: " . ord($opt));
                 
-                $this->debug ( "> " . self::TELCMDS
-                [$cmd] . " " . self::TELOPTS
+                $this->debug ( "> " . $this->TELCMDS
+                [$cmd] . " " . $this->TELOPTS
                 [
                         $opt
-                ];
+                ]
+                ;
                 
                 $this->telcmds['sent'][$opt][$cmd] = true;
                 $this->put_data(self::TEL_IAC . $cmd . $opt, false, false);
                 break;
             case self::TEL_NOP:
-                $this->debug ( "> " . self::TELCMDS
+                $this->debug ( "> " . $this->TELCMDS
                 [
                         $cmd
-                ];
+                ]
+                ;
                 $this->put_data(self::TEL_IAC . $cmd . $opt, false, false);
                 break;
             case self::TEL_SB:
                 if (! self::TELOPT_OK($opt))
                     throw new Exception("invalid TELNET option: " . ord($opt));
-                $this->debug ( "> " . self::TELCMDS
-                [$cmd] . " " . self::TELOPTS
+                $this->debug ( "> " . $this->TELCMDS
+                [$cmd] . " " . $this->TELOPTS
                 [
                         $opt
-                ] . " " . $data; // how
-                  // to
-                  // print/format
-                  // this
-                  // nicely?
-                  
+                ] . " " . $data
+                ; // how
+                                 // to
+                                 // print/format
+                                 // this
+                                 // nicely?
+                                 
                 // Escape IAC char
                 $data = preg_replace('/\xff/', "\xff\xff", $data);
                 
@@ -947,10 +981,11 @@ class Net_Telnet
                 throw new Exception("don't send SE, send SB and I'll add the SE");
                 break;
             default:
-                throw new Exception ( "don't know how to handle " . self::TELCMDS
+                throw new Exception ( "don't know how to handle " . $this->TELCMDS
                 [
                         $cmd
-                ] . " command";
+                ] . " command"
+                ;
                 break;
         }
     }
@@ -975,11 +1010,12 @@ class Net_Telnet
                 if (! self::TELOPT_OK($opt))
                     throw new Exception("invalid TELNET option: " . ord($opt));
                 $this->telcmds['received'][$opt][$cmd] = true;
-                $this->debug ( "< " . self::TELCMDS
-                [$cmd] . " " . self::TELOPTS
+                $this->debug ( "< " . $this->TELCMDS
+                [$cmd] . " " . $this->TELOPTS
                 [
                         $opt
-                ];
+                ]
+                ;
                 switch ($opt) {
                     case self::TELOPT_BINARY:
                         if ($this->mode['rx_binmode']) {
@@ -1061,11 +1097,12 @@ class Net_Telnet
                 if (! self::TELOPT_OK($opt))
                     throw new Exception("invalid TELNET option: " . ord($opt));
                 $this->telcmds['received'][$opt][$cmd] = true;
-                $this->debug ( "< " . self::TELCMDS
-                [$cmd] . " " . self::TELOPTS
+                $this->debug ( "< " . $this->TELCMDS
+                [$cmd] . " " . $this->TELOPTS
                 [
                         $opt
-                ];
+                ]
+                ;
                 switch ($opt) {
                     case self::TELOPT_BINARY:
                         if (! $this->mode['rx_binmode']) {
@@ -1143,11 +1180,12 @@ class Net_Telnet
                 if (! self::TELOPT_OK($opt))
                     throw new Exception("invalid TELNET option: " . ord($opt));
                 $this->telcmds['received'][$opt][$cmd] = true;
-                $this->debug ( "< " . self::TELCMDS
-                [$cmd] . " " . self::TELOPTS
+                $this->debug ( "< " . $this->TELCMDS
+                [$cmd] . " " . $this->TELOPTS
                 [
                         $opt
-                ];
+                ]
+                ;
                 switch ($opt) {
                     case self::TELOPT_BINARY:
                         if ($this->mode['rx_binmode']) {
@@ -1230,11 +1268,12 @@ class Net_Telnet
                 if (! self::TELOPT_OK($opt))
                     throw new Exception("invalid TELNET option: " . ord($opt));
                 $this->telcmds['received'][$opt][$cmd] = true;
-                $this->debug ( "< " . self::TELCMDS
-                [$cmd] . " " . self::TELOPTS
+                $this->debug ( "< " . $this->TELCMDS
+                [$cmd] . " " . $this->TELOPTS
                 [
                         $opt
-                ];
+                ]
+                ;
                 switch ($opt) {
                     case self::TELOPT_BINARY:
                         if (! $this->mode['tx_binmode']) {
@@ -1304,20 +1343,22 @@ class Net_Telnet
             case self::TEL_SB:
                 if (! self::TELOPT_OK($opt))
                     throw new Exception("invalid TELNET option: " . ord($opt));
-                $this->debug ( "< " . self::TELCMDS
-                [$cmd] . " " . self::TELOPTS
+                $this->debug ( "< " . $this->TELCMDS
+                [$cmd] . " " . $this->TELOPTS
                 [
                         $opt
-                ] . ": " . $data;
+                ] . ": " . $data
+                ;
                 $this->debug(
                         "Ignoring SubOption negotiation (don't know what to do)");
                 $this->telcmds['received_opts'][$opt][$cmd] = $data;
                 break;
             default:
-                $this->debug ( "< " . self::TELCMDS
+                $this->debug ( "< " . $this->TELCMDS
                 [
                         $cmd
-                ];
+                ]
+                ;
                 break;
         }
     }
@@ -1770,12 +1811,12 @@ class Net_Telnet
                                     if ($this->mode['telnet_bugs']) {
                                         $this->debug(
                                                 "Error reading TELNET option " .
-                                                         " char for {self::TELCMDS[$c]} command");
+                                                         " char for {$this->TELCMDS[$c]} command");
                                         continue;
                                     } else {
                                         throw new Exception(
                                                 "Error reading TELNET option " .
-                                                         " char for {self::TELCMDS[$c]} command");
+                                                         " char for {$this->TELCMDS[$c]} command");
                                     }
                         }
                         
@@ -1879,8 +1920,9 @@ class Net_Telnet
         $this->userbuf .= $buf;
         
         if ($drain || (count($searchfor) == 0 && (intval($numbytes) == 0) &&
-                 (intval($timeout) > 0)) || (count($searchfor) == 0 &&
-                 (intval($numbytes) > 0) && strlen($buf) >= intval($numbytes))) {
+                 (intval($timeout) > 0)) ||
+                 (count($searchfor) == 0 && (intval($numbytes) > 0) &&
+                 strlen($buf) >= intval($numbytes))) {
             $found = true;
         }
         
