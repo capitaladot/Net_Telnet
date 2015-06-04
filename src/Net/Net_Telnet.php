@@ -531,7 +531,7 @@ class Net_Telnet {
 				else if ($p = getservbyname ( $opts ['port'], 'tcp' ))
 					$this->port = $p;
 				else
-					throw new Exception ( "invalid port" );
+					throw new \Exception ( "invalid port" );
 				
 				$this->debug ( "port set to " . $this->port );
 			}
@@ -540,7 +540,7 @@ class Net_Telnet {
 				if (is_numeric ( $opts ['timeout'] ) && $opts ['timeout'] > 0)
 					$this->timeout = $opts ['timeout'];
 				else
-					throw new Exception ( "invalid timeout" );
+					throw new \Exception ( "invalid timeout" );
 				
 				$this->debug ( "timeout set to " . $this->timeout );
 			}
@@ -719,16 +719,16 @@ class Net_Telnet {
 				else if ($p = getservbyname ( $opts ['port'], 'tcp' ))
 					$this->port = $p;
 				else
-					throw new Exception ( "invalid port" );
+					throw new \Exception ( "invalid port" );
 				
 				$this->debug ( "port set to " . $this->port );
 			}
 		} else if ($this->host == null)
-			throw new Exception ( "remote host is required" );
+			throw new \Exception ( "remote host is required" );
 		
 		if ($this->s !== null)
 			if (! $this->disconnect ())
-				throw new Exception ( "connect called with non-null socket and disconnect failed" );
+				throw new \Exception ( "connect called with non-null socket and disconnect failed" );
 		
 		if (ip2long ( $this->host )) {
 			$this->debug ( "attempting connection to " . $this->host . ":" . $this->port );
@@ -747,11 +747,11 @@ class Net_Telnet {
 						$this->debug ( "connected to " . $a . ":" . $this->port );
 				}
 			} else
-				throw new Exception ( "invalid or unknown hostname: " . $this->host );
+				throw new \Exception ( "invalid or unknown hostname: " . $this->host );
 		}
 		
 		if (! $this->s)
-			throw new Exception ( "connection failed:  $errstr ($errno)" );
+			throw new \Exception ( "connection failed:  $errstr ($errno)" );
 		else
 			stream_set_timeout ( $this->s, $this->timeout );
 		
@@ -777,7 +777,7 @@ class Net_Telnet {
 			}
 			$this->debug ( "closing network socket" );
 			if (($this->s !== null) && (fclose ( $this->s ) === false))
-				throw new Exception ( "error closing socket" );
+				throw new \Exception ( "error closing socket" );
 			$this->s = null;
 		}
 	}
@@ -827,7 +827,7 @@ class Net_Telnet {
 				if (feof ( $this->s ))
 					break;
 				else
-					throw new Exception ( "error writing to socket" );
+					throw new \Exception ( "error writing to socket" );
 			$written += $n;
 		}
 		
@@ -888,7 +888,7 @@ class Net_Telnet {
 	 */
 	function send_telcmd($cmd = self::TEL_NOP, $opt = null, $data = null) {
 		if (! self::TELCMD_OK ( $cmd ))
-			throw new Exception ( "unknown TELNET command: " . ord ( $cmd ) );
+			throw new \Exception ( "unknown TELNET command: " . ord ( $cmd ) );
 		
 		switch ($cmd) {
 			case self::TEL_WILL :
@@ -896,7 +896,7 @@ class Net_Telnet {
 			case self::TEL_DO :
 			case self::TEL_DONT :
 				if (! self::TELOPT_OK ( $opt ))
-					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
+					throw new \Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				
 				$this->debug ( "> " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				
@@ -909,13 +909,13 @@ class Net_Telnet {
 				break;
 			case self::TEL_SB :
 				if (! self::TELOPT_OK ( $opt ))
-					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
+					throw new \Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->debug ( "> " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] . " " . $data ); // how
-				   // to
-				   // print/format
-				   // this
-				   // nicely?
-				   
+				                                                                                           // to
+				                                                                                           // print/format
+				                                                                                           // this
+				                                                                                           // nicely?
+				                                                                                           
 				// Escape IAC char
 				$data = preg_replace ( '/\xff/', "\xff\xff", $data );
 				
@@ -923,10 +923,10 @@ class Net_Telnet {
 				$this->put_data ( self::TEL_IAC . self::TEL_SB . $opt . $data . self::TEL_IAC . self::TEL_SE, false, false );
 				break;
 			case self::TEL_SE :
-				throw new Exception ( "don't send SE, send SB and I'll add the SE" );
+				throw new \Exception ( "don't send SE, send SB and I'll add the SE" );
 				break;
 			default :
-				throw new Exception ( "don't know how to handle " . $this->TELCMDS [$cmd] . " command" );
+				throw new \Exception ( "don't know how to handle " . $this->TELCMDS [$cmd] . " command" );
 				break;
 		}
 	}
@@ -943,12 +943,12 @@ class Net_Telnet {
 	 */
 	function recv_telcmd($cmd = self::TEL_NOP, $opt = null, $data = null) {
 		if (! TELCMD_OK ( $cmd ))
-			throw new Exception ( "unknown TELNET command: " . ord ( $cmd ) );
+			throw new \Exception ( "unknown TELNET command: " . ord ( $cmd ) );
 		
 		switch ($cmd) {
 			case self::TEL_WILL :
 				if (! self::TELOPT_OK ( $opt ))
-					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
+					throw new \Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->telcmds ['received'] [$opt] [$cmd] = true;
 				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				switch ($opt) {
@@ -1024,7 +1024,7 @@ class Net_Telnet {
 				break;
 			case self::TEL_WONT :
 				if (! self::TELOPT_OK ( $opt ))
-					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
+					throw new \Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->telcmds ['received'] [$opt] [$cmd] = true;
 				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				switch ($opt) {
@@ -1094,7 +1094,7 @@ class Net_Telnet {
 				break;
 			case self::TEL_DO :
 				if (! self::TELOPT_OK ( $opt ))
-					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
+					throw new \Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->telcmds ['received'] [$opt] [$cmd] = true;
 				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				switch ($opt) {
@@ -1169,7 +1169,7 @@ class Net_Telnet {
 				break;
 			case self::TEL_DONT :
 				if (! self::TELOPT_OK ( $opt ))
-					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
+					throw new \Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->telcmds ['received'] [$opt] [$cmd] = true;
 				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 				switch ($opt) {
@@ -1233,7 +1233,7 @@ class Net_Telnet {
 				break;
 			case self::TEL_SB :
 				if (! self::TELOPT_OK ( $opt ))
-					throw new Exception ( "invalid TELNET option: " . ord ( $opt ) );
+					throw new \Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				$this->debug ( "< " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] . ": " . $data );
 				$this->debug ( "Ignoring SubOption negotiation (don't know what to do)" );
 				$this->telcmds ['received_opts'] [$opt] [$cmd] = $data;
@@ -1347,7 +1347,7 @@ class Net_Telnet {
 		} else if (is_array ( $arg )) {
 			$strings = $arg;
 		} else
-			throw new Exception ( "println called with invalid input" );
+			throw new \Exception ( "println called with invalid input" );
 		
 		foreach ( $strings as $str ) {
 			if (substr ( $str, 0 - 1 ) !== "\n")
@@ -1409,7 +1409,7 @@ class Net_Telnet {
 		else if (is_array ( $arg ))
 			$cmds = $arg;
 		else
-			throw new Exception ( "cmd called with invalid input" );
+			throw new \Exception ( "cmd called with invalid input" );
 		
 		$retval = "";
 		$ok = true;
@@ -1454,7 +1454,7 @@ class Net_Telnet {
 		else if (is_array ( $arg ))
 			$args = $arg;
 		else
-			throw new Exception ( "expect called with invalid input" );
+			throw new \Exception ( "expect called with invalid input" );
 		
 		if (count ( $args ) == 1 && (strlen ( key ( $args ) ) == 0)) {
 			$this->debug ( "expect: reading stream, with nothing to watch for" );
@@ -1472,7 +1472,7 @@ class Net_Telnet {
 		}
 		
 		if (count ( $pats ) == 0)
-			throw new Exception ( "expect called with invalid input" );
+			throw new \Exception ( "expect called with invalid input" );
 		
 		if ($this->read_stream ( $pats ) === false) {
 			$this->debug ( "expect: read_stream failed" );
@@ -1483,7 +1483,7 @@ class Net_Telnet {
 			$this->debug ( "expect: read_stream found {$this->lastmatch}," . " sending {$args[$this->lastmatch]}" );
 			return $this->send ( $args [$this->lastmatch] );
 		} else
-			throw new Exception ( "expect broke, don't have lastmatch ({$this->lastmatch})" );
+			throw new \Exception ( "expect broke, don't have lastmatch ({$this->lastmatch})" );
 	}
 	
 	/**
@@ -1572,7 +1572,7 @@ class Net_Telnet {
 			if ($this->s) {
 				$this->net_write ();
 				if (fclose ( $this->s ) === false)
-					throw new Exception ( "error closing socket" );
+					throw new \Exception ( "error closing socket" );
 				$this->s = null;
 			}
 			return false;
@@ -1618,7 +1618,7 @@ class Net_Telnet {
 					else
 						continue;
 				else
-					throw new Exception ( "Error reading from network" );
+					throw new \Exception ( "Error reading from network" );
 			}
 			
 			if ($this->mode ['telnet'] && $c == self::TEL_IAC) { /*
@@ -1639,7 +1639,7 @@ class Net_Telnet {
 						$this->debug ( "Error reading TELNET command char from network" );
 						break;
 					} else
-						throw new Exception ( "Error reading TELNET command char from network" );
+						throw new \Exception ( "Error reading TELNET command char from network" );
 				}
 				
 				switch ($c) {
@@ -1664,7 +1664,7 @@ class Net_Telnet {
 								$this->debug ( "Error reading TELNET option " . " char for {$this->TELCMDS[$c]} command" );
 								continue;
 							} else {
-								throw new Exception ( "Error reading TELNET option " . " char for {$this->TELCMDS[$c]} command" );
+								throw new \Exception ( "Error reading TELNET option " . " char for {$this->TELCMDS[$c]} command" );
 							}
 						}
 						
@@ -1696,7 +1696,7 @@ class Net_Telnet {
 								$this->debug ( "Error reading TELNET SubNegotiation command" );
 								continue;
 							} else
-								throw new Exception ( "Error reading TELNET SubNegotiation command" );
+								throw new \Exception ( "Error reading TELNET SubNegotiation command" );
 						}
 						$this->recv_telcmd ( $telcmd, $subopt, $data );
 						break;
@@ -1710,7 +1710,7 @@ class Net_Telnet {
 						$buf = '';
 						break;
 					case self::TEL_IP :
-						throw new Exception ( "Received TELNET Interrupt Process (IP)" );
+						throw new \Exception ( "Received TELNET Interrupt Process (IP)" );
 						break;
 					case self::TEL_NOP :
 					default :
@@ -1764,7 +1764,7 @@ class Net_Telnet {
 		if ($info ['eof']) {
 			$this->net_write ();
 			if (fclose ( $this->s ) === false)
-				throw new Exception ( "error closing socket" );
+				throw new \Exception ( "error closing socket" );
 			$this->s = null;
 		}
 		
@@ -1829,7 +1829,7 @@ class Net_Telnet {
 		
 		if ((! array_key_exists ( 'login_success', $this->login )) || (strlen ( $this->login ['login_success'] ) == 0)) {
 			if (strlen ( $this->prompt ) == 0)
-				throw new Exception ( "login usage error:  " . "need to set login_success and/or command prompt" );
+				throw new \Exception ( "login usage error:  " . "need to set login_success and/or command prompt" );
 			$this->debug ( "login_success defaulting to " . $this->login ['login_prompt'] );
 			$this->login ['login_success'] = $this->prompt;
 		}
@@ -1838,7 +1838,7 @@ class Net_Telnet {
 			$this->connect ();
 		
 		if ($this->net_write () === false)
-			throw new Exception ( "login: error with network socket" );
+			throw new \Exception ( "login: error with network socket" );
 		
 		if (array_key_exists ( 'login_prompt', $this->login ) && strlen ( $this->login ['login_prompt'] ) > 0) {
 			if (! (array_key_exists ( 'login_fail', $this->login ) && strlen ( $this->login ['login_fail'] ) > 0)) {
@@ -1851,7 +1851,7 @@ class Net_Telnet {
 			$l = (array_key_exists ( 'login', $this->login ) ? $this->login ['login'] : '');
 			
 			if ($this->expect ( $this->login ['login_prompt'], $l . "\r" ) === false)
-				throw new Exception ( "login: failed to find login prompt" );
+				throw new \Exception ( "login: failed to find login prompt" );
 		}
 		
 		if (array_key_exists ( 'password_prompt', $this->login ) && strlen ( $this->login ['password_prompt'] ) > 0) {
@@ -1865,7 +1865,7 @@ class Net_Telnet {
 			$p = (array_key_exists ( 'password', $this->login ) ? $this->login ['password'] : '');
 			
 			if ($this->expect ( $this->login ['password_prompt'], $p . "\r" ) === false)
-				throw new Exception ( "login: failed to find password prompt" );
+				throw new \Exception ( "login: failed to find password prompt" );
 		}
 		
 		if (array_key_exists ( 'login_fail', $this->login ) && strlen ( $this->login ['login_fail'] ) > 0) {
@@ -1884,18 +1884,18 @@ class Net_Telnet {
 		}
 		
 		if (($ret = $this->read_stream ( $prompts )) === false)
-			throw new Exception ( "login: failed to complete login" );
+			throw new \Exception ( "login: failed to complete login" );
 		
 		if ($this->lastmatch == $this->login ['login_success'])
 			$this->debug ( "login: login was successful" );
 		else if ($this->lastmatch == $this->login ['login_fail'])
-			throw new Exception ( "login: login failed" );
+			throw new \Exception ( "login: login failed" );
 		
 		if ($this->login ['login_success'] != $this->prompt) {
 			$this->debug ( "login: waiting for command prompt: {$this->prompt}" );
 			
 			if (($ret = $this->waitfor ( $this->prompt )) === false)
-				throw new Exception ( "login: error in telnet session," . " didn't find prompt (failed login?)" );
+				throw new \Exception ( "login: error in telnet session," . " didn't find prompt (failed login?)" );
 		} else
 			$ret = $this->get_data ();
 		
