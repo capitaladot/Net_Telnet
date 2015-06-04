@@ -920,11 +920,11 @@ class Net_Telnet {
 						$opt
 				] . " " . $data
 				; // how
-				  // to
-				  // print/format
-				  // this
-				  // nicely?
-				  
+				                 // to
+				                 // print/format
+				                 // this
+				                 // nicely?
+				                 
 				// Escape IAC char
 				$data = preg_replace ( '/\xff/', "\xff\xff", $data );
 				
