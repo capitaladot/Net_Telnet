@@ -537,14 +537,14 @@ function echomode($mode = null) {
 		case "local" :
 			if ($this->mode ['echo_remote']) {
 				$this->debug ( "Disabling Remote Echo" );
-				$this->send_telcmd ( TEL_DONT, TELOPT_ECHO );
+				$this->send_telcmd ( $this->TEL_DONT, TELOPT_ECHO );
 				$this->mode ['echo_remote'] = false;
 			}
 			break;
 		case "remote" :
 			if (! $this->mode ['echo_remote']) {
 				$this->debug ( "Requesting Remote Echo" );
-				$this->send_telcmd ( TEL_DO, TELOPT_ECHO );
+				$this->send_telcmd ( $this->TEL_DO, TELOPT_ECHO );
 				
 				if (! $this->mode ['echo_local']) {
 					$this->debug ( "Enabling Local Echo" );
@@ -559,7 +559,7 @@ function echomode($mode = null) {
 			}
 			if ($this->mode ['echo_remote']) {
 				$this->debug ( "Disabling Remote Echo" );
-				$this->send_telcmd ( TEL_DONT, TELOPT_ECHO );
+				$this->send_telcmd ( $this->TEL_DONT, TELOPT_ECHO );
 				$this->mode ['echo_remote'] = false;
 			}
 			break;
@@ -724,7 +724,7 @@ function initial_options() {
 		 * though rfc858 says it must be suppressed in
 		 * both directions independently.
 		 */
-		$this->send_telcmd ( TEL_WILL, TELOPT_SGA );
+		$this->send_telcmd ( $this->TEL_WILL, TELOPT_SGA );
 	}
 	
 	switch ($this->mode ['echomode']) {
@@ -733,8 +733,8 @@ function initial_options() {
 			break;
 		case "remote" :
 		default :
-			$this->send_telcmd ( TEL_DO, TELOPT_ECHO );
-			$this->send_telcmd ( TEL_DO, TELOPT_SGA );
+			$this->send_telcmd ( $this->TEL_DO, TELOPT_ECHO );
+			$this->send_telcmd ( $this->TEL_DO, TELOPT_SGA );
 			break;
 	}
 	
@@ -743,8 +743,8 @@ function initial_options() {
 		 * Working around a buggy telnet that strips the BINARY
 		 * (ie. ASCII 0) out of the datastream by not requesting it.
 		 */
-		$this->send_telcmd ( TEL_DO, TELOPT_BINARY );
-		$this->send_telcmd ( TEL_WILL, TELOPT_BINARY );
+		$this->send_telcmd ( $this->TEL_DO, TELOPT_BINARY );
+		$this->send_telcmd ( $this->TEL_WILL, TELOPT_BINARY );
 	}
 	
 	$this->net_write ();
@@ -763,7 +763,7 @@ function initial_options() {
  * @param string $data
  *        	Raw data to send as the SubOption Negotiation
  */
-function send_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
+function send_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 	if (! $this->TELCMD_OK ( $cmd ))
 		throw new Exception ( "unknown TELNET command: " . ord ( $cmd ) );
 	
@@ -778,11 +778,11 @@ function send_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 			$this->debug ( "> " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
 			
 			$this->telcmds ['sent'] [$opt] [$cmd] = true;
-			$this->put_data ( TEL_IAC . $cmd . $opt, false, false );
+			$this->put_data ( $this->TEL_IAC . $cmd . $opt, false, false );
 			break;
 		case $this->TEL_NOP :
 			$this->debug ( "> " . $this->TELCMDS [$cmd] );
-			$this->put_data ( TEL_IAC . $cmd . $opt, false, false );
+			$this->put_data ( $this->TEL_IAC . $cmd . $opt, false, false );
 			break;
 		case $this->TEL_SB :
 			if (! $this->TELOPT_OK ( $opt ))
@@ -793,7 +793,7 @@ function send_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 			$data = preg_replace ( '/\xff/', "\xff\xff", $data );
 			
 			$this->telcmds ['sent_opts'] [$opt] [$cmd] = $data;
-			$this->put_data ( TEL_IAC . TEL_SB . $opt . $data . TEL_IAC . TEL_SE, false, false );
+			$this->put_data ( $this->TEL_IAC . $this->TEL_SB . $opt . $data . $this->TEL_IAC . $this->TEL_SE, false, false );
 			break;
 		case $this->TEL_SE :
 			throw new Exception ( "don't send SE, send SB and I'll add the SE" );
@@ -814,7 +814,7 @@ function send_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
  * @param string $data
  *        	Raw data read in SubOption Negotiation
  */
-function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
+function recv_telcmd($cmd = $this->TEL_NOP, $opt = null, $data = null) {
 	if (! TELCMD_OK ( $cmd ))
 		throw new Exception ( "unknown TELNET command: " . ord ( $cmd ) );
 	
@@ -831,11 +831,11 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					}
 					
 					// maybe should default to "DO" but needs testing
-					if (array_key_exists ( TEL_DO, $this->telcmds ['sent'] [$opt] )) {
+					if (array_key_exists ( $this->TEL_DO, $this->telcmds ['sent'] [$opt] )) {
 						$this->mode ['rx_binmode'] = true;
 						$this->debug ( "Enabling Binary Mode on receive" );
 					} else
-						$this->send_telcmd ( TEL_DONT, $opt );
+						$this->send_telcmd ( $this->TEL_DONT, $opt );
 					break;
 				case $this->TELOPT_ECHO :
 					if ($this->mode ['echo_remote']) {
@@ -846,7 +846,7 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 						case "local" :
 						case "none" :
 							$this->debug ( "Refusing Remote Echo" );
-							$this->send_telcmd ( TEL_DONT, $opt );
+							$this->send_telcmd ( $this->TEL_DONT, $opt );
 							break;
 						case "remote" :
 						default :
@@ -857,11 +857,11 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 							if ($this->mode ['echo_net']) {
 								$this->debug ( "Disabling Local Network Echo" );
 								$this->mode ['echo_net'] = false;
-								$this->send_telcmd ( TEL_WONT, $opt );
+								$this->send_telcmd ( $this->TEL_WONT, $opt );
 							}
 							
-							if (! array_key_exists ( TEL_DO, $this->telcmds ['sent'] [$opt] ))
-								$this->send_telcmd ( TEL_DO, $opt );
+							if (! array_key_exists ( $this->TEL_DO, $this->telcmds ['sent'] [$opt] ))
+								$this->send_telcmd ( $this->TEL_DO, $opt );
 							break;
 					}
 					
@@ -878,18 +878,18 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 						$this->debug ( "Enabling Suppress Go Ahead (SGA) on Transmit" );
 						$this->mode ['tx_sga'] = true;
 						
-						if (! array_key_exists ( TEL_WILL, $this->telcmds ['sent'] [$opt] ))
-							$this->send_telcmd ( TEL_WILL, $opt );
+						if (! array_key_exists ( $this->TEL_WILL, $this->telcmds ['sent'] [$opt] ))
+							$this->send_telcmd ( $this->TEL_WILL, $opt );
 					}
 					
-					if (! array_key_exists ( TEL_DO, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_DO, $opt );
+					if (! array_key_exists ( $this->TEL_DO, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_DO, $opt );
 					break;
 				case $this->TELOPT_STATUS :
 				case $this->TELOPT_TM :
 					break;
 				case $this->TELOPT_EXOPL :
-					$this->send_telcmd ( TEL_DONT, $opt );
+					$this->send_telcmd ( $this->TEL_DONT, $opt );
 					break;
 				default :
 					break;
@@ -909,8 +909,8 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					$this->debug ( "Disabling Binary Mode on receive" );
 					$this->mode ['rx_binmode'] = false;
 					
-					if (! array_key_exists ( TEL_DONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_DONT, $opt );
+					if (! array_key_exists ( $this->TEL_DONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_DONT, $opt );
 					break;
 				case $this->TELOPT_ECHO :
 					if (! $this->mode ['echo_remote']) {
@@ -924,8 +924,8 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 							break;
 					}
 					
-					if (! array_key_exists ( TEL_DONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_DONT, $opt );
+					if (! array_key_exists ( $this->TEL_DONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_DONT, $opt );
 					break;
 				case $this->TELOPT_SGA :
 					if (! $this->mode ['rx_sga']) {
@@ -937,7 +937,7 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					
 					if ($this->mode ['echo_remote']) {
 						$this->debug ( "Disabling Remote Echo" );
-						$this->send_telcmd ( TEL_DONT, TELOPT_ECHO );
+						$this->send_telcmd ( $this->TEL_DONT, TELOPT_ECHO );
 						$this->mode ['echo_remote'] = false;
 						
 						if ($this->mode ['echomode'] == "remote") {
@@ -950,12 +950,12 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 						$this->debug ( "Disabling Suppress Go Ahead (SGA) on Transmit" . " (workaround for broken TELNETs)" );
 						$this->mode ['tx_sga'] = false;
 						
-						if (! array_key_exists ( TEL_WONT, $this->telcmds ['sent'] [$opt] ))
-							$this->send_telcmd ( TEL_WONT, $opt );
+						if (! array_key_exists ( $this->TEL_WONT, $this->telcmds ['sent'] [$opt] ))
+							$this->send_telcmd ( $this->TEL_WONT, $opt );
 					}
 					
-					if (! array_key_exists ( TEL_DONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_DONT, $opt );
+					if (! array_key_exists ( $this->TEL_DONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_DONT, $opt );
 					break;
 				case $this->TELOPT_STATUS :
 				case $this->TELOPT_TM :
@@ -977,11 +977,11 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					}
 					
 					// maybe should default to "WILL" but needs testing
-					if (array_key_exists ( TEL_WILL, $this->telcmds ['sent'] [$opt] )) {
+					if (array_key_exists ( $this->TEL_WILL, $this->telcmds ['sent'] [$opt] )) {
 						$this->mode ['tx_binmode'] = true;
 						$this->debug ( "Enabling Binary Mode on transmit" );
 					} else
-						$this->send_telcmd ( TEL_WONT, $opt );
+						$this->send_telcmd ( $this->TEL_WONT, $opt );
 					break;
 				case $this->TELOPT_ECHO :
 					if ($this->mode ['echo_net']) {
@@ -991,7 +991,7 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					if ($this->mode ['echo_remote']) {
 						$this->debug ( "Disabling Remote Echo to prevent Echo loop" );
 						$this->mode ['echo_remote'] = false;
-						$this->send_telcmd ( TEL_DONT, $opt );
+						$this->send_telcmd ( $this->TEL_DONT, $opt );
 					}
 					
 					switch ($this->mode ['echomode']) {
@@ -1005,8 +1005,8 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					$this->debug ( "Enabling Local Network Echo" );
 					$this->mode ['echo_net'] = true;
 					
-					if (! array_key_exists ( TEL_WILL, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_WILL, $opt );
+					if (! array_key_exists ( $this->TEL_WILL, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_WILL, $opt );
 				
 				case $this->TELOPT_SGA :
 					if ($this->mode ['tx_sga']) {
@@ -1019,24 +1019,24 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					if ($this->mode ['telnet_bugs'] && ! $this->mode ['rx_sga']) {
 						$this->debug ( "Enabling Suppress Go Ahead (SGA) on Receive" . " (workaround for broken TELNETs)" );
 						$this->mode ['rx_sga'] = true;
-						if (! array_key_exists ( TEL_DO, $this->telcmds ['sent'] [$opt] ))
-							$this->send_telcmd ( TEL_DO, $opt );
+						if (! array_key_exists ( $this->TEL_DO, $this->telcmds ['sent'] [$opt] ))
+							$this->send_telcmd ( $this->TEL_DO, $opt );
 					}
 					
-					if (! array_key_exists ( TEL_WILL, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_WILL, $opt );
+					if (! array_key_exists ( $this->TEL_WILL, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_WILL, $opt );
 					break;
 				case $this->TELOPT_STATUS :
-					$this->send_telcmd ( TEL_WONT, $opt );
+					$this->send_telcmd ( $this->TEL_WONT, $opt );
 					break;
 				case $this->TELOPT_TM :
-					$this->send_telcmd ( TEL_WILL, $opt );
+					$this->send_telcmd ( $this->TEL_WILL, $opt );
 					break;
 				case $this->TELOPT_EXOPL :
-					$this->send_telcmd ( TEL_WONT, $opt );
+					$this->send_telcmd ( $this->TEL_WONT, $opt );
 					break;
 				default :
-					$this->send_telcmd ( TEL_WONT, $opt );
+					$this->send_telcmd ( $this->TEL_WONT, $opt );
 					break;
 			}
 			break;
@@ -1054,8 +1054,8 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					$this->debug ( "Disabling Binary Mode on transmit" );
 					$this->mode ['tx_binmode'] = false;
 					
-					if (! array_key_exists ( TEL_WONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_WONT, $opt );
+					if (! array_key_exists ( $this->TEL_WONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_WONT, $opt );
 					break;
 				case $this->TELOPT_ECHO :
 					if (! $this->mode ['echo_net']) {
@@ -1065,8 +1065,8 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					$this->debug ( "Disabling Local Network Echo" );
 					$this->mode ['echo_net'] = false;
 					
-					if (! array_key_exists ( TEL_WONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_WONT, $opt );
+					if (! array_key_exists ( $this->TEL_WONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_WONT, $opt );
 					break;
 				case $this->TELOPT_SGA :
 					if (! $this->mode ['tx_sga']) {
@@ -1079,12 +1079,12 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 					if ($this->mode ['telnet_bugs'] && $this->mode ['rx_sga']) {
 						$this->debug ( "Disabling Suppress Go Ahead (SGA) on Receive" . " (workaround for broken TELNETs)" );
 						$this->mode ['rx_sga'] = false;
-						if (! array_key_exists ( TEL_DONT, $this->telcmds ['sent'] [$opt] ))
-							$this->send_telcmd ( TEL_DONT, $opt );
+						if (! array_key_exists ( $this->TEL_DONT, $this->telcmds ['sent'] [$opt] ))
+							$this->send_telcmd ( $this->TEL_DONT, $opt );
 						
 						if ($this->mode ['echo_remote']) {
 							$this->debug ( "Disabling Remote Echo" );
-							$this->send_telcmd ( TEL_DONT, TELOPT_ECHO );
+							$this->send_telcmd ( $this->TEL_DONT, TELOPT_ECHO );
 							$this->mode ['echo_remote'] = false;
 							
 							if ($this->mode ['echomode'] == "remote") {
@@ -1094,8 +1094,8 @@ function recv_telcmd($cmd = TEL_NOP, $opt = null, $data = null) {
 						}
 					}
 					
-					if (! array_key_exists ( TEL_WONT, $this->telcmds ['sent'] [$opt] ))
-						$this->send_telcmd ( TEL_WONT, $opt );
+					if (! array_key_exists ( $this->TEL_WONT, $this->telcmds ['sent'] [$opt] ))
+						$this->send_telcmd ( $this->TEL_WONT, $opt );
 					break;
 				case $this->TELOPT_STATUS :
 				case $this->TELOPT_TM :
@@ -1129,7 +1129,7 @@ function go_ahead() {
 	else if ($this->GA) {
 		$this->net_write ();
 		if ($this->mode ['telnet']) {
-			$this->net_write ( TEL_IAC . TEL_GA );
+			$this->net_write ( $this->TEL_IAC . $this->TEL_GA );
 			$this->GA = false;
 		}
 	} else
@@ -1147,7 +1147,7 @@ function go_ahead() {
  * @return s boolean indicates if data was written
  */
 function send_break() {
-	$this->writebuf .= TEL_IAC . TEL_BREAK;
+	$this->writebuf .= $this->TEL_IAC . $this->TEL_BREAK;
 	return ($this->net_write () > 0) ? true : false;
 }
 
@@ -1494,7 +1494,7 @@ function read_stream($searchfor = null, $numbytes = null, $timeout = null) {
 				throw new Exception ( "Error reading from network" );
 		}
 		
-		if ($this->mode ['telnet'] && $c == TEL_IAC) { /* Interpret As Command */
+		if ($this->mode ['telnet'] && $c == $this->TEL_IAC) { /* Interpret As Command */
 			if (! feof ( $s ) && ($c = fgetc ( $s )) === false) {
 				$info = stream_get_meta_data ( $s );
 				
@@ -1546,7 +1546,7 @@ function read_stream($searchfor = null, $numbytes = null, $timeout = null) {
 					$subopt = null;
 					$data = $c;
 					
-					while ( ! feof ( $s ) && ($c != TEL_SE) && (($c = fgetc ( $s )) !== false) ) {
+					while ( ! feof ( $s ) && ($c != $this->TEL_SE) && (($c = fgetc ( $s )) !== false) ) {
 						if ($subopt === null)
 							$subopt = $c;
 						
