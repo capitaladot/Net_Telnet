@@ -164,29 +164,28 @@ class Net_Telnet {
 	/**
 	 * Definitions for the TELNET protocol.
 	 */
-	protected $TEL_IAC = chr(255); // interpret as command:
-	protected $TEL_DONT =  chr (254); //  you are not to use option */
-	protected $TEL_DO =  chr (253); // please, you use option */
-	protected $TEL_WONT =  chr (252); // I won't use option 
-	protected $TEL_WILL =  chr (251); // I will use option 
-	protected $TEL_SB =  chr (250); // interpret as subnegotiation 
-	protected $TEL_GA =  chr (249); // you may reverse the line 
-	protected $TEL_EL =  chr (248); // erase the current line 
-	protected $TEL_EC =  chr (247); // erase the current character 
-	protected $TEL_AYT =  chr (246); // are you there 
-	protected $TEL_AO =  chr (245); // abort output--but let prog finish 
-	protected $TEL_IP =  chr (244); // interrupt process--permanently 
-	protected $TEL_BREAK =  chr (243); // break 
-	protected $TEL_DM =  chr (242); // data mark--for connect. cleaning 
-	protected $TEL_NOP =  chr (241); // nop 
-	protected $TEL_SE =  chr (240); // end sub negotiation 
-	protected $TEL_EOR =  chr (239); // end of record (transparent mode) 
-	protected $TEL_ABORT =  chr (238); // Abort process 
-	protected $TEL_SUSP =  chr (237); // Suspend process 
-	protected $TEL_EOF =  chr (236); // End of file: EOF is already used... 
-	
-	protected $TEL_SYNCH =  chr (242); // for telfunc calls
-	protected $TEL_xEOF = chr (236); // Name compatible with bsd telnet.h  
+	protected $TEL_IAC = 255; // interpret as command:
+	protected $TEL_DONT =  254; //  you are not to use option 
+	protected $TEL_DO =  253; // please, you use option 
+	protected $TEL_WONT =  252; // I won't use option 
+	protected $TEL_WILL =  251; // I will use option 
+	protected $TEL_SB =  250; // interpret as subnegotiation 
+	protected $TEL_GA =  249; // you may reverse the line 
+	protected $TEL_EL =  248; // erase the current line 
+	protected $TEL_EC =  247; // erase the current character 
+	protected $TEL_AYT =  246; // are you there 
+	protected $TEL_AO =  245; // abort output--but let prog finish 
+	protected $TEL_IP =  244; // interrupt process--permanently 
+	protected $TEL_BREAK =  243; // break 
+	protected $TEL_DM =  242; // data mark--for connect. cleaning 
+	protected $TEL_NOP =  241; // nop 
+	protected $TEL_SE =  240; // end sub negotiation 
+	protected $TEL_EOR =  239; // end of record (transparent mode) 
+	protected $TEL_ABORT =  238; // Abort process 
+	protected $TEL_SUSP =  237; // Suspend process 
+	protected $TEL_EOF =  236; // End of file: EOF is already used... 
+	protected $TEL_SYNCH =  242; // for telfunc calls
+	protected $TEL_xEOF = 236; // Name compatible with bsd telnet.h  
 
 /**
  * TELNET command printable names.
@@ -213,61 +212,63 @@ class Net_Telnet {
 		$this->TEL_SUSP => "SUSP",
 		$this->TEL_EOF => "EOF" 
 );
+
 /**
  * Tests for valid TELNET command.
  *
  * @param integer $x
- *        	value to test as a TELNET command
+ *            value to test as a TELNET command
  * @return boolean
  */
-function TELCMD_OK($x) {
-	return array_key_exists ( $x, $this->TELCMDS );
+function TELCMD_OK ($x)
+{
+    return array_key_exists(chr($x), $this->TELCMDS);
 }
 	
 	/**
 	 * TELNET options
 	 */
-	protected $TELOPT_BINARY =  chr (0); /* 8-bit data path */
-	protected $TELOPT_ECHO =  chr (1); /* echo */
-	protected $TELOPT_RCP =  chr (2); /* prepare to reconnect */
-	protected $TELOPT_SGA =  chr (3); /* suppress go ahead */
-	protected $TELOPT_NAMS =  chr (4); /* approximate message size */
-	protected $TELOPT_STATUS =  chr (5); /* give status */
-	protected $TELOPT_TM =  chr (6); /* timing mark */
-	protected $TELOPT_RCTE =  chr (7); /* remote controlled transmission and echo */
-	protected $TELOPT_NAOL =  chr (8); /* negotiate about output line width */
-	protected $TELOPT_NAOP =  chr (9); /* negotiate about output page size */
-	protected $TELOPT_NAOCRD =  chr (10); /* negotiate about CR disposition */
-	protected $TELOPT_NAOHTS =  chr (11); /* negotiate about horizontal tabstops */
-	protected $TELOPT_NAOHTD =  chr (12); /* negotiate about horizontal tab disposition */
-	protected $TELOPT_NAOFFD =  chr (13); /* negotiate about formfeed disposition */
-	protected $TELOPT_NAOVTS =  chr (14); /* negotiate about vertical tab stops */
-	protected $TELOPT_NAOVTD =  chr (15); /* negotiate about vertical tab disposition */
-	protected $TELOPT_NAOLFD =  chr (16); /* negotiate about output LF disposition */
-	protected $TELOPT_XASCII =  chr (17); /* extended ascii character set */
-	protected $TELOPT_LOGOUT =  chr (18); /* force logout */
-	protected $TELOPT_BM =  chr (19); /* byte macro */
-	protected $TELOPT_DET =  chr (20); /* data entry terminal */
-	protected $TELOPT_SUPDUP =  chr (21); /* supdup protocol */
-	protected $TELOPT_SUPDUPOUTPUT =  chr (22); /* supdup output */
-	protected $TELOPT_SNDLOC =  chr (23); /* send location */
-	protected $TELOPT_TTYPE =  chr (24); /* terminal type */
-	protected $TELOPT_EOR =  chr (25); /* end or record */
-	protected $TELOPT_TUID =  chr (26); /* TACACS user identification */
-	protected $TELOPT_OUTMRK =  chr (27); /* output marking */
-	protected $TELOPT_TTYLOC =  chr (28); /* terminal location number */
+	protected $TELOPT_BINARY =  0; /* 8-bit data path */
+	protected $TELOPT_ECHO =  1; /* echo */
+	protected $TELOPT_RCP =  2; /* prepare to reconnect */
+	protected $TELOPT_SGA =  3; /* suppress go ahead */
+	protected $TELOPT_NAMS =  4; /* approximate message size */
+	protected $TELOPT_STATUS =  5; /* give status */
+	protected $TELOPT_TM =  6; /* timing mark */
+	protected $TELOPT_RCTE =  7; /* remote controlled transmission and echo */
+	protected $TELOPT_NAOL =  8; /* negotiate about output line width */
+	protected $TELOPT_NAOP =  9; /* negotiate about output page size */
+	protected $TELOPT_NAOCRD =  10; /* negotiate about CR disposition */
+	protected $TELOPT_NAOHTS =  11; /* negotiate about horizontal tabstops */
+	protected $TELOPT_NAOHTD =  12; /* negotiate about horizontal tab disposition */
+	protected $TELOPT_NAOFFD =  13; /* negotiate about formfeed disposition */
+	protected $TELOPT_NAOVTS =  14; /* negotiate about vertical tab stops */
+	protected $TELOPT_NAOVTD =  15; /* negotiate about vertical tab disposition */
+	protected $TELOPT_NAOLFD =  16; /* negotiate about output LF disposition */
+	protected $TELOPT_XASCII =  17; /* extended ascii character set */
+	protected $TELOPT_LOGOUT =  18; /* force logout */
+	protected $TELOPT_BM =  19; /* byte macro */
+	protected $TELOPT_DET =  20; /* data entry terminal */
+	protected $TELOPT_SUPDUP =  21; /* supdup protocol */
+	protected $TELOPT_SUPDUPOUTPUT =  22; /* supdup output */
+	protected $TELOPT_SNDLOC =  23; /* send location */
+	protected $TELOPT_TTYPE =  24; /* terminal type */
+	protected $TELOPT_EOR =  25; /* end or record */
+	protected $TELOPT_TUID =  26; /* TACACS user identification */
+	protected $TELOPT_OUTMRK =  27; /* output marking */
+	protected $TELOPT_TTYLOC =  28; /* terminal location number */
 	protected $TELOPT_3270REGIME = chr ( 29 ) ); /* 3270 regime */
 	protected $TELOPT_X3PAD = chr ( 30 ) ); /* X.3 PAD */
-	protected $TELOPT_NAWS =  chr (31); /* window size */
-	protected $TELOPT_TSPEED =  chr (32); /* terminal speed */
-	protected $TELOPT_LFLOW =  chr (33); /* remote flow control */
-	protected $TELOPT_LINEMODE =  chr (34); /* Linemode option */
-	protected $TELOPT_XDISPLOC =  chr (35); /* X Display Location */
-	protected $TELOPT_OLD_ENVIRON =  chr (36); /* Old - Environment variables */
-	protected $TELOPT_AUTHENTICATION =  chr (37); /* Authenticate */
-	protected $TELOPT_ENCRYPT =  chr (38); /* Encryption option */
-	protected $TELOPT_NEW_ENVIRON =  chr (39); /* New - Environment variables */
-	protected $TELOPT_EXOPL =  chr (255); /* extended-options-list */
+	protected $TELOPT_NAWS =  31; /* window size */
+	protected $TELOPT_TSPEED =  32; /* terminal speed */
+	protected $TELOPT_LFLOW =  33; /* remote flow control */
+	protected $TELOPT_LINEMODE =  34; /* Linemode option */
+	protected $TELOPT_XDISPLOC =  35; /* X Display Location */
+	protected $TELOPT_OLD_ENVIRON =  36; /* Old - Environment variables */
+	protected $TELOPT_AUTHENTICATION =  37; /* Authenticate */
+	protected $TELOPT_ENCRYPT =  38; /* Encryption option */
+	protected $TELOPT_NEW_ENVIRON =  39; /* New - Environment variables */
+	protected $TELOPT_EXOPL =  255; /* extended-options-list */
 
 /**
  * TELNET option printable names.
@@ -324,7 +325,7 @@ private $TELOPTS = array (
  * @return boolean
  */
 function $this->TELOPT_OK($x) {
-	return array_key_exists ( $x, $this->TELOPTS );
+	return array_key_exists ( chr($x), $this->TELOPTS );
 }
 	
 	/**
