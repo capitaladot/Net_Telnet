@@ -430,7 +430,7 @@ class Net_Telnet {
 	 * @return boolean
 	 */
 	function TELOPT_OK($x) {
-		return array_key_exists ( chr ( $x ), $this->TELOPTS );
+		return array_key_exists ( $x, $this->TELOPTS );
 	}
 	
 	/**
@@ -895,7 +895,7 @@ class Net_Telnet {
 			case self::TEL_WONT :
 			case self::TEL_DO :
 			case self::TEL_DONT :
-				if (! self::TELOPT_OK ( $opt ))
+				if (! $this->TELOPT_OK ( $opt ))
 					throw new \Exception ( "invalid TELNET option: " . ord ( $opt ) );
 				
 				$this->debug ( "> " . $this->TELCMDS [$cmd] . " " . $this->TELOPTS [$opt] );
