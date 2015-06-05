@@ -245,7 +245,7 @@ class Net_Telnet {
 	 * @return boolean
 	 */
 	function TELCMD_OK($x) {
-		return array_key_exists ( chr ( $x ), $this->TELCMDS );
+		return array_key_exists ( $x, $this->TELCMDS );
 	}
 	
 	/**
